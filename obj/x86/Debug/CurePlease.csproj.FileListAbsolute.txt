@@ -143,3 +143,51 @@ C:\Users\Main\Desktop\VirusScanExcusion\GITHUB DESKTOP\Cure-Please\obj\x86\Debug
 C:\Users\Main\Desktop\VirusScanExcusion\GITHUB DESKTOP\Cure-Please\obj\x86\Debug\Cure Please.exe
 C:\Users\Main\Desktop\VirusScanExcusion\GITHUB DESKTOP\Cure-Please\obj\x86\Debug\Cure Please.pdb
 C:\Users\Main\Desktop\VirusScanExcusion\GITHUB DESKTOP\Cure-Please\obj\x86\Debug\CurePlease.csprojAssemblyReference.cache
+C:\Users\User\Desktop\Exclusions\GITHUB DESKTOP\Cure-Please\bin\Debug\Cure Please.exe
+C:\Users\User\Desktop\Exclusions\GITHUB DESKTOP\Cure-Please\bin\Debug\Cure Please.pdb
+C:\Users\User\Desktop\Exclusions\GITHUB DESKTOP\Cure-Please\bin\Debug\EliteMMO.API.dll
+C:\Users\User\Desktop\Exclusions\GITHUB DESKTOP\Cure-Please\bin\Debug\GlobalHotKey.dll
+C:\Users\User\Desktop\Exclusions\GITHUB DESKTOP\Cure-Please\obj\x86\Debug\CurePlease.csprojAssemblyReference.cache
+C:\Users\User\Desktop\Exclusions\GITHUB DESKTOP\Cure-Please\obj\x86\Debug\CurePlease.Form1.resources
+C:\Users\User\Desktop\Exclusions\GITHUB DESKTOP\Cure-Please\obj\x86\Debug\CurePlease.Form2.resources
+C:\Users\User\Desktop\Exclusions\GITHUB DESKTOP\Cure-Please\obj\x86\Debug\CurePlease.Form3.resources
+C:\Users\User\Desktop\Exclusions\GITHUB DESKTOP\Cure-Please\obj\x86\Debug\CurePlease.Form4.resources
+C:\Users\User\Desktop\Exclusions\GITHUB DESKTOP\Cure-Please\obj\x86\Debug\CurePlease.PartyBuffs.resources
+C:\Users\User\Desktop\Exclusions\GITHUB DESKTOP\Cure-Please\obj\x86\Debug\CurePlease.Properties.Resources.resources
+C:\Users\User\Desktop\Exclusions\GITHUB DESKTOP\Cure-Please\obj\x86\Debug\CurePlease.csproj.GenerateResource.cache
+C:\Users\User\Desktop\Exclusions\GITHUB DESKTOP\Cure-Please\obj\x86\Debug\CurePlease.csproj.CoreCompileInputs.cache
+C:\Users\User\Desktop\Exclusions\GITHUB DESKTOP\Cure-Please\obj\x86\Debug\CurePlease.csproj.CopyComplete
+C:\Users\User\Desktop\Exclusions\GITHUB DESKTOP\Cure-Please\obj\x86\Debug\Cure Please.exe
+C:\Users\User\Desktop\Exclusions\GITHUB DESKTOP\Cure-Please\obj\x86\Debug\Cure Please.pdb
+C:\Users\User\Desktop\Exclusions\Programming\Cure-Please\bin\Debug\Cure Please.exe
+C:\Users\User\Desktop\Exclusions\Programming\Cure-Please\bin\Debug\Cure Please.pdb
+C:\Users\User\Desktop\Exclusions\Programming\Cure-Please\bin\Debug\EliteMMO.API.dll
+C:\Users\User\Desktop\Exclusions\Programming\Cure-Please\bin\Debug\GlobalHotKey.dll
+C:\Users\User\Desktop\Exclusions\Programming\Cure-Please\obj\x86\Debug\CurePlease.csprojAssemblyReference.cache
+C:\Users\User\Desktop\Exclusions\Programming\Cure-Please\obj\x86\Debug\CurePlease.Form1.resources
+C:\Users\User\Desktop\Exclusions\Programming\Cure-Please\obj\x86\Debug\CurePlease.Form2.resources
+C:\Users\User\Desktop\Exclusions\Programming\Cure-Please\obj\x86\Debug\CurePlease.Form3.resources
+C:\Users\User\Desktop\Exclusions\Programming\Cure-Please\obj\x86\Debug\CurePlease.Form4.resources
+C:\Users\User\Desktop\Exclusions\Programming\Cure-Please\obj\x86\Debug\CurePlease.PartyBuffs.resources
+C:\Users\User\Desktop\Exclusions\Programming\Cure-Please\obj\x86\Debug\CurePlease.Properties.Resources.resources
+C:\Users\User\Desktop\Exclusions\Programming\Cure-Please\obj\x86\Debug\CurePlease.csproj.GenerateResource.cache
+C:\Users\User\Desktop\Exclusions\Programming\Cure-Please\obj\x86\Debug\CurePlease.csproj.CoreCompileInputs.cache
+C:\Users\User\Desktop\Exclusions\Programming\Cure-Please\obj\x86\Debug\CurePlease.csproj.CopyComplete
+C:\Users\User\Desktop\Exclusions\Programming\Cure-Please\obj\x86\Debug\Cure Please.exe
+C:\Users\User\Desktop\Exclusions\Programming\Cure-Please\obj\x86\Debug\Cure Please.pdb
+C:\Users\Account\Desktop\Exclusions\Programming\Cure-Please\bin\Debug\Cure Please.exe
+C:\Users\Account\Desktop\Exclusions\Programming\Cure-Please\bin\Debug\Cure Please.pdb
+C:\Users\Account\Desktop\Exclusions\Programming\Cure-Please\bin\Debug\EliteMMO.API.dll
+C:\Users\Account\Desktop\Exclusions\Programming\Cure-Please\bin\Debug\GlobalHotKey.dll
+C:\Users\Account\Desktop\Exclusions\Programming\Cure-Please\obj\x86\Debug\CurePlease.csprojAssemblyReference.cache
+C:\Users\Account\Desktop\Exclusions\Programming\Cure-Please\obj\x86\Debug\CurePlease.Form1.resources
+C:\Users\Account\Desktop\Exclusions\Programming\Cure-Please\obj\x86\Debug\CurePlease.Form2.resources
+C:\Users\Account\Desktop\Exclusions\Programming\Cure-Please\obj\x86\Debug\CurePlease.Form3.resources
+C:\Users\Account\Desktop\Exclusions\Programming\Cure-Please\obj\x86\Debug\CurePlease.Form4.resources
+C:\Users\Account\Desktop\Exclusions\Programming\Cure-Please\obj\x86\Debug\CurePlease.PartyBuffs.resources
+C:\Users\Account\Desktop\Exclusions\Programming\Cure-Please\obj\x86\Debug\CurePlease.Properties.Resources.resources
+C:\Users\Account\Desktop\Exclusions\Programming\Cure-Please\obj\x86\Debug\CurePlease.csproj.GenerateResource.cache
+C:\Users\Account\Desktop\Exclusions\Programming\Cure-Please\obj\x86\Debug\CurePlease.csproj.CoreCompileInputs.cache
+C:\Users\Account\Desktop\Exclusions\Programming\Cure-Please\obj\x86\Debug\CurePlease.csproj.CopyComplete
+C:\Users\Account\Desktop\Exclusions\Programming\Cure-Please\obj\x86\Debug\Cure Please.exe
+C:\Users\Account\Desktop\Exclusions\Programming\Cure-Please\obj\x86\Debug\Cure Please.pdb
