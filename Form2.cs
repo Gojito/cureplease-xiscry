@@ -13,35 +13,6 @@
     public partial class Form2 : Form
     {
         #region "== Settings Class"
-
-        public class SkillCaps : List<SkillCaps>
-        {
-            public string Job
-            {
-                get; set;
-            }
-
-            public int Level
-            {
-                get; set;
-            }
-
-            public int Skill
-            {
-                get; set;
-            }
-
-            public int Vit
-            {
-                get; set;
-            }
-
-            public int Mnd
-            {
-                get; set;
-            }
-        }
-
         public class JobTitles : List<JobTitles>
         {
             public int job_number
@@ -212,6 +183,11 @@
 
             // ENHANCING MAGIC TAB / BASIC
             public decimal autoHasteMinutes
+            {
+                get; set;
+            }
+
+            public decimal autoAdloquiumMinutes
             {
                 get; set;
             }
@@ -431,6 +407,26 @@
             }
 
             public bool plAquaveil
+            {
+                get; set;
+            }
+
+            public bool plHaste
+            {
+                get; set;
+            }
+
+            public int plHaste_Level
+            {
+                get; set;
+            }
+
+            public bool plSpikes
+            {
+                get; set;
+            }
+
+            public int plSpikes_Spell
             {
                 get; set;
             }
@@ -931,6 +927,18 @@
                 get; set;
             }
 
+            public bool Esuna
+            {
+                get;
+                set;
+            }
+
+            public bool EsunaOnlyAmnesia
+            {
+                get;
+                set;
+            }
+
             // PL DEBUFFS
             public bool plAgiDown
             {
@@ -1145,6 +1153,12 @@
             public bool plWeight
             {
                 get; set;
+            }
+
+            public bool plAmnesia
+            {
+                get;
+                set;
             }
 
             // MONITORED DEBUFFS
@@ -1376,6 +1390,12 @@
             public bool monitoredWeight
             {
                 get; set;
+            }
+
+            public bool monitoredAmnesia
+            {
+                get;
+                set;
             }
 
             // NA SPECIFICATION CHECKBOXES
@@ -1658,6 +1678,18 @@
                 get; set;
             }
 
+            // DISABLE CANCEL TARGETTING
+            public bool DisableTargettingCancel
+            {
+                get; set;
+            }
+
+            // DELAY BEFORE REMOVING TARGET
+            public decimal TargetRemoval_Delay
+            {
+                get; set;
+            }
+
             // RAISE SETTINGS
             public bool AcceptRaise
             {
@@ -1681,6 +1713,11 @@
             }
 
             public bool enableMonitoredPriority
+            {
+                get; set;
+            }
+
+            public bool enableOutOfPartyHealing
             {
                 get; set;
             }
@@ -1738,6 +1775,10 @@
             {
                 get; set;
             }
+            public bool enableHotKeys
+            {
+                get; set;
+            }
 
             // FAST CAST MODE
             public bool enableFastCast_Mode
@@ -1769,125 +1810,125 @@
         public List<JobTitles> JobNames = new List<JobTitles>();
         public int runOnce = 0;
 
-        public Form2()
+        public Form2 ( )
         {
             StartPosition = FormStartPosition.CenterScreen;
 
-            InitializeComponent();
+            InitializeComponent ( );
 
-            JobNames.Add(new JobTitles
+            JobNames.Add ( new JobTitles
             {
                 job_number = 1,
                 job_name = "WAR",
-            });
-            JobNames.Add(new JobTitles
+            } );
+            JobNames.Add ( new JobTitles
             {
                 job_number = 2,
                 job_name = "MNK"
-            });
-            JobNames.Add(new JobTitles
+            } );
+            JobNames.Add ( new JobTitles
             {
                 job_number = 3,
                 job_name = "WHM"
-            });
-            JobNames.Add(new JobTitles
+            } );
+            JobNames.Add ( new JobTitles
             {
                 job_number = 4,
                 job_name = "BLM"
-            });
-            JobNames.Add(new JobTitles
+            } );
+            JobNames.Add ( new JobTitles
             {
                 job_number = 5,
                 job_name = "RDM"
-            });
-            JobNames.Add(new JobTitles
+            } );
+            JobNames.Add ( new JobTitles
             {
                 job_number = 6,
                 job_name = "THF"
-            });
-            JobNames.Add(new JobTitles
+            } );
+            JobNames.Add ( new JobTitles
             {
                 job_number = 7,
                 job_name = "PLD"
-            });
-            JobNames.Add(new JobTitles
+            } );
+            JobNames.Add ( new JobTitles
             {
                 job_number = 8,
                 job_name = "DRK"
-            });
-            JobNames.Add(new JobTitles
+            } );
+            JobNames.Add ( new JobTitles
             {
                 job_number = 9,
                 job_name = "BST"
-            });
-            JobNames.Add(new JobTitles
+            } );
+            JobNames.Add ( new JobTitles
             {
                 job_number = 10,
                 job_name = "BRD"
-            });
-            JobNames.Add(new JobTitles
+            } );
+            JobNames.Add ( new JobTitles
             {
                 job_number = 11,
                 job_name = "RNG"
-            });
-            JobNames.Add(new JobTitles
+            } );
+            JobNames.Add ( new JobTitles
             {
                 job_number = 12,
                 job_name = "SAM"
-            });
-            JobNames.Add(new JobTitles
+            } );
+            JobNames.Add ( new JobTitles
             {
                 job_number = 13,
                 job_name = "NIN"
-            });
-            JobNames.Add(new JobTitles
+            } );
+            JobNames.Add ( new JobTitles
             {
                 job_number = 14,
                 job_name = "DRG"
-            });
-            JobNames.Add(new JobTitles
+            } );
+            JobNames.Add ( new JobTitles
             {
                 job_number = 15,
                 job_name = "SMN"
-            });
-            JobNames.Add(new JobTitles
+            } );
+            JobNames.Add ( new JobTitles
             {
                 job_number = 16,
                 job_name = "BLU"
-            });
-            JobNames.Add(new JobTitles
+            } );
+            JobNames.Add ( new JobTitles
             {
                 job_number = 17,
                 job_name = "COR"
-            });
-            JobNames.Add(new JobTitles
+            } );
+            JobNames.Add ( new JobTitles
             {
                 job_number = 18,
                 job_name = "PUP"
-            });
-            JobNames.Add(new JobTitles
+            } );
+            JobNames.Add ( new JobTitles
             {
                 job_number = 19,
                 job_name = "DNC"
-            });
-            JobNames.Add(new JobTitles
+            } );
+            JobNames.Add ( new JobTitles
             {
                 job_number = 20,
                 job_name = "SCH"
-            });
+            } );
 
-            JobNames.Add(new JobTitles
+            JobNames.Add ( new JobTitles
             {
                 job_number = 21,
                 job_name = "GEO"
-            });
-            JobNames.Add(new JobTitles
+            } );
+            JobNames.Add ( new JobTitles
             {
                 job_number = 22,
                 job_name = "RUN"
-            });
+            } );
 
-            if (config.settingsSet != true)
+            if ( config.settingsSet != true )
             {
                 // HEALING MAGIC
                 config.cure1enabled = false;
@@ -1900,7 +1941,7 @@
                 config.cure2amount = 60;
                 config.cure3amount = 130;
                 config.cure4amount = 270;
-                config.cure5amount = 4500;
+                config.cure5amount = 450;
                 config.cure6amount = 600;
                 config.curePercentage = 75;
                 config.monitoredCurePercentage = 85;
@@ -1925,6 +1966,7 @@
 
                 // BASIC ENHANCING
                 config.autoHasteMinutes = 2;
+                config.autoAdloquiumMinutes = 2;
                 config.autoProtect_Minutes = 29;
                 config.autoShellMinutes = 29;
                 config.autoPhalanxIIMinutes = 2;
@@ -1971,6 +2013,11 @@
                 config.plStormSpell_Spell = 0;
                 config.plAuspice = false;
                 config.plAquaveil = false;
+                config.plHaste = false;
+                config.plHaste_Level = 0;
+                config.plSpikes = false;
+                config.plSpikes_Spell = 0;
+
                 config.plUtsusemi = false;
 
                 // SCHOLAR STRATAGEMS
@@ -2111,6 +2158,7 @@
                 config.plThrenody = false;
                 config.plVitDown = false;
                 config.plWeight = false;
+                config.plAmnesia = false;
 
                 config.enablePartyDebuffRemoval = false;
                 config.SpecifiednaSpellsenable = false;
@@ -2123,6 +2171,8 @@
                 config.naPoison = false;
                 config.naSilence = false;
                 config.naErase = false;
+                config.Esuna = false;
+                config.EsunaOnlyAmnesia = false;
 
                 config.PrioritiseOverLowerTier = false;
 
@@ -2173,6 +2223,7 @@
                 config.monitoredThrenody = false;
                 config.monitoredVitDown = false;
                 config.monitoredWeight = false;
+                config.monitoredAmnesia = false;
 
                 config.na_Weight = false;
                 config.na_VitDown = false;
@@ -2217,6 +2268,9 @@
                 config.autoTargetSpell = "Dia";
                 config.AssistSpecifiedTarget = false;
 
+                config.DisableTargettingCancel = false;
+                config.TargetRemoval_Delay = 3;
+
                 config.AcceptRaise = false;
                 config.AcceptRaiseOnlyWhenNotInCombat = false;
 
@@ -2246,6 +2300,7 @@
                 config.Overcure = true;
                 config.Undercure = true;
                 config.enableMonitoredPriority = false;
+                config.enableOutOfPartyHealing = true;
                 config.OvercureOnHighPriority = false;
 
                 config.EnableAddOn = false;
@@ -2263,6 +2318,7 @@
                 config.autoFollowDistance = 5;
                 config.autoFollow_Warning = false;
                 config.FFXIDefaultAutoFollow = false;
+                config.enableHotKeys = false;
 
                 config.ipAddress = "127.0.0.1";
                 config.listeningPort = "19769";
@@ -2275,10 +2331,10 @@
                 config.settingsSet = true;
             }
 
-            updateForm(config);
+            updateForm ( config );
 
             string path = System.IO.Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "Settings");
-            if (loadJobSettings.Checked == false && System.IO.File.Exists(path + "/loadSettings"))
+            if ( loadJobSettings.Checked == false && System.IO.File.Exists ( path + "/loadSettings" ) )
             {
                 loadJobSettings.Checked = true;
             }
@@ -2292,31 +2348,31 @@
 
         #region "== Cure Percentage's Changed"
 
-        private void curePercentage_ValueChanged(object sender, EventArgs e)
+        private void curePercentage_ValueChanged ( object sender, EventArgs e )
         {
-            curePercentageValueLabel.Text = curePercentage.Value.ToString();
+            curePercentageValueLabel.Text = curePercentage.Value.ToString ( );
         }
 
-        private void priorityCurePercentage_ValueChanged(object sender, EventArgs e)
+        private void priorityCurePercentage_ValueChanged ( object sender, EventArgs e )
         {
-            priorityCurePercentageValueLabel.Text = priorityCurePercentage.Value.ToString();
+            priorityCurePercentageValueLabel.Text = priorityCurePercentage.Value.ToString ( );
         }
 
-        private void curagaPercentage_ValueChanged(object sender, EventArgs e)
+        private void curagaPercentage_ValueChanged ( object sender, EventArgs e )
         {
-            curagaPercentageValueLabel.Text = curagaCurePercentage.Value.ToString();
+            curagaPercentageValueLabel.Text = curagaCurePercentage.Value.ToString ( );
         }
 
-        private void monitoredPercentage_ValueChanged(object sender, EventArgs e)
+        private void monitoredPercentage_ValueChanged ( object sender, EventArgs e )
         {
-            monitoredCurePercentageValueLabel.Text = monitoredCurePercentage.Value.ToString();
+            monitoredCurePercentageValueLabel.Text = monitoredCurePercentage.Value.ToString ( );
         }
 
         #endregion "== Cure Percentage's Changed"
 
         #region "== All Settings Saved"
 
-        public void button4_Click(object sender, EventArgs e)
+        public void button4_Click ( object sender, EventArgs e )
         {
             // HEALING MAGIC
             config.cure1enabled = cure1enabled.Checked;
@@ -2325,12 +2381,12 @@
             config.cure4enabled = cure4enabled.Checked;
             config.cure5enabled = cure5enabled.Checked;
             config.cure6enabled = cure6enabled.Checked;
-            config.cure1amount = Convert.ToInt32(cure1amount.Value);
-            config.cure2amount = Convert.ToInt32(cure2amount.Value);
-            config.cure3amount = Convert.ToInt32(cure3amount.Value);
-            config.cure4amount = Convert.ToInt32(cure4amount.Value);
-            config.cure5amount = Convert.ToInt32(cure5amount.Value);
-            config.cure6amount = Convert.ToInt32(cure6amount.Value);
+            config.cure1amount = Convert.ToInt32 ( cure1amount.Value );
+            config.cure2amount = Convert.ToInt32 ( cure2amount.Value );
+            config.cure3amount = Convert.ToInt32 ( cure3amount.Value );
+            config.cure4amount = Convert.ToInt32 ( cure4amount.Value );
+            config.cure5amount = Convert.ToInt32 ( cure5amount.Value );
+            config.cure6amount = Convert.ToInt32 ( cure6amount.Value );
             config.curePercentage = curePercentage.Value;
             config.priorityCurePercentage = priorityCurePercentage.Value;
             config.monitoredCurePercentage = monitoredCurePercentage.Value;
@@ -2340,11 +2396,11 @@
             config.curaga3enabled = curaga3Enabled.Checked;
             config.curaga4enabled = curaga4Enabled.Checked;
             config.curaga5enabled = curaga5Enabled.Checked;
-            config.curagaAmount = Convert.ToInt32(curagaAmount.Value);
-            config.curaga2Amount = Convert.ToInt32(curaga2Amount.Value);
-            config.curaga3Amount = Convert.ToInt32(curaga3Amount.Value);
-            config.curaga4Amount = Convert.ToInt32(curaga4Amount.Value);
-            config.curaga5Amount = Convert.ToInt32(curaga5Amount.Value);
+            config.curagaAmount = Convert.ToInt32 ( curagaAmount.Value );
+            config.curaga2Amount = Convert.ToInt32 ( curaga2Amount.Value );
+            config.curaga3Amount = Convert.ToInt32 ( curaga3Amount.Value );
+            config.curaga4Amount = Convert.ToInt32 ( curaga4Amount.Value );
+            config.curaga5Amount = Convert.ToInt32 ( curaga5Amount.Value );
             config.curagaCurePercentage = curagaCurePercentage.Value;
             config.curagaTargetType = curagaTargetType.SelectedIndex;
             config.curagaTargetName = curagaTargetName.Text;
@@ -2354,6 +2410,7 @@
 
             // BASIC ENHANCING
             config.autoHasteMinutes = autoHasteMinutes.Value;
+            config.autoAdloquiumMinutes = autoAdloquium_Minutes.Value;
             config.autoProtect_Minutes = autoProtect_Minutes.Value;
             config.autoShellMinutes = autoShell_Minutes.Value;
             config.autoPhalanxIIMinutes = autoPhalanxIIMinutes.Value;
@@ -2364,40 +2421,40 @@
             config.plShell = plShell.Checked;
             config.plBlink = plBlink.Checked;
             config.plReraise = plReraise.Checked;
-            if (plReraiseLevel1.Checked)
+            if ( plReraiseLevel1.Checked )
             {
                 config.plReraise_Level = 1;
             }
-            else if (plReraiseLevel2.Checked)
+            else if ( plReraiseLevel2.Checked )
             {
                 config.plReraise_Level = 2;
             }
-            else if (plReraiseLevel3.Checked)
+            else if ( plReraiseLevel3.Checked )
             {
                 config.plReraise_Level = 3;
             }
-            else if (plReraiseLevel4.Checked)
+            else if ( plReraiseLevel4.Checked )
             {
                 config.plReraise_Level = 4;
             }
             config.plRegen = plRegen.Checked;
-            if (plRegenLevel1.Checked)
+            if ( plRegenLevel1.Checked )
             {
                 config.plRegen_Level = 1;
             }
-            else if (plRegenLevel2.Checked)
+            else if ( plRegenLevel2.Checked )
             {
                 config.plRegen_Level = 2;
             }
-            else if (plRegenLevel3.Checked)
+            else if ( plRegenLevel3.Checked )
             {
                 config.plRegen_Level = 3;
             }
-            else if (plRegenLevel4.Checked)
+            else if ( plRegenLevel4.Checked )
             {
                 config.plRegen_Level = 4;
             }
-            else if (plRegenLevel5.Checked)
+            else if ( plRegenLevel5.Checked )
             {
                 config.plRegen_Level = 5;
             }
@@ -2413,11 +2470,11 @@
             config.autoStorm_Spell = autoStorm.SelectedIndex;
             config.autoProtect_Spell = autoProtect.SelectedIndex;
             config.plTemper = plTemper.Checked;
-            if (plTemperLevel1.Checked)
+            if ( plTemperLevel1.Checked )
             {
                 config.plTemper_Level = 1;
             }
-            else if (plTemperLevel2.Checked)
+            else if ( plTemperLevel2.Checked )
             {
                 config.plTemper_Level = 2;
             }
@@ -2437,17 +2494,31 @@
             config.plKlimaform = plKlimaform.Checked;
             config.plAuspice = plAuspice.Checked;
             config.plAquaveil = plAquaveil.Checked;
+
+            config.plHaste = plHaste.Checked;
+            if ( plHasteLevel1.Checked )
+            {
+                config.plHaste_Level = 1;
+            }
+            else if ( plHasteLevel2.Checked )
+            {
+                config.plHaste_Level = 2;
+            }
+
+            config.plSpikes = plSpikes.Checked;
+            config.plSpikes_Spell = plSpikes_Spell.SelectedIndex;
+
             config.plUtsusemi = plUtsusemi.Checked;
             config.plRefresh = plRefresh.Checked;
-            if (plRefreshLevel1.Checked)
+            if ( plRefreshLevel1.Checked )
             {
                 config.plRefresh_Level = 1;
             }
-            else if (plRefreshLevel2.Checked)
+            else if ( plRefreshLevel2.Checked )
             {
                 config.plRefresh_Level = 2;
             }
-            else if (plRefreshLevel3.Checked)
+            else if ( plRefreshLevel3.Checked )
             {
                 config.plRefresh_Level = 3;
             }
@@ -2599,6 +2670,7 @@
             config.plThrenody = plThrenody.Checked;
             config.plVitDown = plVitDown.Checked;
             config.plWeight = plWeight.Checked;
+            config.plAmnesia = plAmnesia.Checked;
             config.plDoomEnabled = plDoomEnabled.Checked;
             config.plDoomitem = plDoomitem.SelectedIndex;
 
@@ -2614,6 +2686,8 @@
             config.naPoison = naPoison.Checked;
             config.naSilence = naSilence.Checked;
             config.naErase = naErase.Checked;
+            config.Esuna = Esuna.Checked;
+            config.EsunaOnlyAmnesia = EsunaOnlyAmnesia.Checked;
 
             config.na_Weight = na_Weight.Checked;
             config.na_VitDown = na_VitDown.Checked;
@@ -2695,6 +2769,7 @@
             config.monitoredThrenody = monitoredThrenody.Checked;
             config.monitoredVitDown = monitoredVitDown.Checked;
             config.monitoredWeight = monitoredWeight.Checked;
+            config.monitoredAmnesia = monitoredAmnesia.Checked;
 
             // OTHER OPTIONS
 
@@ -2706,6 +2781,9 @@
             config.Hate_SpellType = Hate_SpellType.SelectedIndex;
             config.autoTarget_Target = autoTarget_target.Text;
             config.AssistSpecifiedTarget = AssistSpecifiedTarget.Checked;
+
+            config.DisableTargettingCancel = DisableTargettingCancel.Checked;
+            config.TargetRemoval_Delay = TargetRemoval_Delay.Value;
 
             config.AcceptRaise = acceptRaise.Checked;
             config.AcceptRaiseOnlyWhenNotInCombat = acceptRaiseOnlyWhenNotInCombat.Checked;
@@ -2734,6 +2812,7 @@
             config.Overcure = Overcure.Checked;
             config.Undercure = Undercure.Checked;
             config.enableMonitoredPriority = enableMonitoredPriority.Checked;
+            config.enableOutOfPartyHealing = enableOutOfPartyHealing.Checked;
             config.OvercureOnHighPriority = OvercureOnHighPriority.Checked;
             config.EnableAddOn = enableAddOn.Checked;
 
@@ -2748,6 +2827,7 @@
             config.autoFollowDistance = autoFollowDistance.Value;
             config.autoFollow_Warning = autoFollow_Warning.Checked;
             config.FFXIDefaultAutoFollow = FFXIDefaultAutoFollow.Checked;
+            config.enableHotKeys = enableHotKeys.Checked;
 
             config.ipAddress = ipAddress.Text;
             config.listeningPort = listeningPort.Text;
@@ -2759,27 +2839,27 @@
 
             string path = System.IO.Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "Settings");
 
-            if (loadJobSettings.Checked == true)
+            if ( loadJobSettings.Checked == true )
             {
                 string fileName = "loadSettings";
                 FileStream stream = File.Create(path + "/" + fileName);
-                stream.Close();
-                stream.Dispose();
+                stream.Close ( );
+                stream.Dispose ( );
             }
-            else if (loadJobSettings.Checked == false && System.IO.File.Exists(path + "/loadSettings"))
+            else if ( loadJobSettings.Checked == false && System.IO.File.Exists ( path + "/loadSettings" ) )
             {
                 try
                 {
-                    System.IO.File.Delete(path + "/loadSettings");
+                    System.IO.File.Delete ( path + "/loadSettings" );
                 }
-                catch (System.IO.IOException)
+                catch ( System.IO.IOException )
                 {
                     //Console.WriteLine(e.Message);
                     return;
                 }
             }
 
-            Close();
+            Close ( );
             //MessageBox.Show("Saved!", "All Settings");
         }
 
@@ -2787,9 +2867,9 @@
 
         #region "== PL Debuff Check Boxes"
 
-        private void plDebuffEnabled_CheckedChanged(object sender, EventArgs e)
+        private void plDebuffEnabled_CheckedChanged ( object sender, EventArgs e )
         {
-            if (plDebuffEnabled.Checked)
+            if ( plDebuffEnabled.Checked )
             {
                 plAgiDown.Checked = true;
                 plAgiDown.Enabled = true;
@@ -2877,8 +2957,10 @@
                 plVitDown.Enabled = true;
                 plWeight.Checked = true;
                 plWeight.Enabled = true;
+                plAmnesia.Checked = true;
+                plAmnesia.Enabled = true;
             }
-            else if (plDebuffEnabled.Checked == false)
+            else if ( plDebuffEnabled.Checked == false )
             {
                 plAgiDown.Checked = false;
                 plAgiDown.Enabled = false;
@@ -2966,6 +3048,8 @@
                 plVitDown.Enabled = false;
                 plWeight.Checked = false;
                 plWeight.Enabled = false;
+                plAmnesia.Checked = false;
+                plAmnesia.Enabled = false;
             }
         }
 
@@ -2973,9 +3057,9 @@
 
         #region "== Na spell check boxes"
 
-        private void naSpellsenable_CheckedChanged(object sender, EventArgs e)
+        private void naSpellsenable_CheckedChanged ( object sender, EventArgs e )
         {
-            if (naSpellsenable.Checked)
+            if ( naSpellsenable.Checked )
             {
                 naBlindness.Checked = true;
                 naBlindness.Enabled = true;
@@ -2996,8 +3080,9 @@
                 naSilence.Checked = true;
                 naSilence.Enabled = true;
                 naErase.Enabled = true;
+                Esuna.Enabled = true;
             }
-            else if (naSpellsenable.Checked == false)
+            else if ( naSpellsenable.Checked == false )
             {
                 naBlindness.Checked = false;
                 naBlindness.Enabled = false;
@@ -3017,8 +3102,10 @@
                 naPoison.Enabled = false;
                 naSilence.Checked = false;
                 naSilence.Enabled = false;
-                naErase.Enabled = false;
                 naErase.Checked = false;
+                naErase.Enabled = false;
+                Esuna.Checked = false;
+                Esuna.Enabled = false;
             }
         }
 
@@ -3026,9 +3113,9 @@
 
         #region "== Monitored Player Debuff Check Boxes"
 
-        private void monitoredDebuffEnabled_CheckedChanged(object sender, EventArgs e)
+        private void monitoredDebuffEnabled_CheckedChanged ( object sender, EventArgs e )
         {
-            if (monitoredDebuffEnabled.Checked)
+            if ( monitoredDebuffEnabled.Checked )
             {
                 monitoredAgiDown.Checked = true;
                 monitoredAgiDown.Enabled = true;
@@ -3122,8 +3209,10 @@
                 monitoredVitDown.Enabled = true;
                 monitoredWeight.Checked = true;
                 monitoredWeight.Enabled = true;
+                monitoredAmnesia.Checked = true;
+                monitoredAmnesia.Enabled = true;
             }
-            else if (monitoredDebuffEnabled.Checked == false)
+            else if ( monitoredDebuffEnabled.Checked == false )
             {
                 monitoredAgiDown.Checked = false;
                 monitoredAgiDown.Enabled = false;
@@ -3216,6 +3305,8 @@
                 monitoredVitDown.Checked = false;
                 monitoredVitDown.Enabled = false;
                 monitoredWeight.Checked = false;
+                monitoredAmnesia.Checked = false;
+                monitoredAmnesia.Enabled = false;
                 monitoredWeight.Enabled = false;
             }
         }
@@ -3224,15 +3315,15 @@
 
         #region "== Geomancy Check Boxes"
 
-        private void EnableGeoSpells_CheckedChanged(object sender, EventArgs e)
+        private void EnableGeoSpells_CheckedChanged ( object sender, EventArgs e )
         {
-            if (EnableGeoSpells.Checked)
+            if ( EnableGeoSpells.Checked )
             {
                 INDISpell.Enabled = true;
                 entrustINDISpell.Enabled = true;
                 entrustSpell_target.Enabled = true;
             }
-            else if (EnableGeoSpells.Checked == false)
+            else if ( EnableGeoSpells.Checked == false )
             {
                 INDISpell.Enabled = false;
                 entrustINDISpell.Enabled = false;
@@ -3240,14 +3331,14 @@
             }
         }
 
-        private void EnableLuopanSpells_CheckedChanged(object sender, EventArgs e)
+        private void EnableLuopanSpells_CheckedChanged ( object sender, EventArgs e )
         {
-            if (EnableLuopanSpells.Checked)
+            if ( EnableLuopanSpells.Checked )
             {
                 GEOSpell.Enabled = true;
                 GEOSpell_target.Enabled = true;
             }
-            else if (EnableLuopanSpells.Checked == false)
+            else if ( EnableLuopanSpells.Checked == false )
             {
                 GEOSpell.Enabled = false;
                 GEOSpell_target.Enabled = false;
@@ -3256,17 +3347,17 @@
 
         #endregion "== Geomancy Check Boxes"
 
-        private void saveAsButton_Click(object sender, EventArgs e)
+        private void saveAsButton_Click ( object sender, EventArgs e )
         {
-            button4_Click(sender, e);
+            button4_Click ( sender, e );
 
             SaveFileDialog savefile = new SaveFileDialog();
 
-            if (Form1._ELITEAPIPL != null)
+            if ( Form1._ELITEAPIPL != null )
             {
-                if (Form1._ELITEAPIPL.Player.MainJob != 0)
+                if ( Form1._ELITEAPIPL.Player.MainJob != 0 )
                 {
-                    if (Form1._ELITEAPIPL.Player.SubJob != 0)
+                    if ( Form1._ELITEAPIPL.Player.SubJob != 0 )
                     {
                         JobTitles mainJob = JobNames.Where(c => c.job_number == Form1._ELITEAPIPL.Player.MainJob).FirstOrDefault();
                         JobTitles subJob = JobNames.Where(c => c.job_number == Form1._ELITEAPIPL.Player.SubJob).FirstOrDefault();
@@ -3285,19 +3376,19 @@
             }
             savefile.Filter = " Extensible Markup Language (*.xml)|*.xml";
             savefile.FilterIndex = 2;
-            savefile.InitialDirectory = System.IO.Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "Settings");
+            savefile.InitialDirectory = System.IO.Path.Combine ( System.AppDomain.CurrentDomain.BaseDirectory, "Settings" );
 
-            if (savefile.ShowDialog() == DialogResult.OK)
+            if ( savefile.ShowDialog ( ) == DialogResult.OK )
             {
                 XmlSerializer mySerializer = new XmlSerializer(typeof(MySettings));
                 StreamWriter myWriter = new StreamWriter(savefile.FileName);
-                mySerializer.Serialize(myWriter, config);
-                myWriter.Close();
-                myWriter.Dispose();
+                mySerializer.Serialize ( myWriter, config );
+                myWriter.Close ( );
+                myWriter.Dispose ( );
             }
         }
 
-        private void loadButton_Click(object sender, EventArgs e)
+        private void loadButton_Click ( object sender, EventArgs e )
         {
             OpenFileDialog openFileDialog1 = new OpenFileDialog
             {
@@ -3306,21 +3397,21 @@
                 InitialDirectory = System.IO.Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "Settings")
             };
 
-            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            if ( openFileDialog1.ShowDialog ( ) == DialogResult.OK )
             {
                 XmlSerializer mySerializer = new XmlSerializer(typeof(MySettings));
 
                 StreamReader reader = new StreamReader(openFileDialog1.FileName);
-                config = (MySettings)mySerializer.Deserialize(reader);
+                config = ( MySettings ) mySerializer.Deserialize ( reader );
 
-                reader.Close();
-                reader.Dispose();
-                updateForm(config);
-                button4_Click(sender, e);
+                reader.Close ( );
+                reader.Dispose ( );
+                updateForm ( config );
+                button4_Click ( sender, e );
             }
         }
 
-        public void updateForm(MySettings config)
+        public void updateForm ( MySettings config )
         {
             // HEALING MAGIC
             cure1enabled.Checked = config.cure1enabled;
@@ -3336,11 +3427,11 @@
             cure5amount.Value = config.cure5amount;
             cure6amount.Value = config.cure6amount;
             curePercentage.Value = config.curePercentage;
-            curePercentageValueLabel.Text = config.curePercentage.ToString(CultureInfo.InvariantCulture);
+            curePercentageValueLabel.Text = config.curePercentage.ToString ( CultureInfo.InvariantCulture );
             priorityCurePercentage.Value = config.priorityCurePercentage;
-            priorityCurePercentageValueLabel.Text = config.priorityCurePercentage.ToString(CultureInfo.InvariantCulture);
+            priorityCurePercentageValueLabel.Text = config.priorityCurePercentage.ToString ( CultureInfo.InvariantCulture );
             monitoredCurePercentage.Value = config.monitoredCurePercentage;
-            monitoredCurePercentageValueLabel.Text = config.monitoredCurePercentage.ToString(CultureInfo.InvariantCulture);
+            monitoredCurePercentageValueLabel.Text = config.monitoredCurePercentage.ToString ( CultureInfo.InvariantCulture );
 
             curagaEnabled.Checked = config.curagaEnabled;
             curaga2Enabled.Checked = config.curaga2enabled;
@@ -3355,7 +3446,7 @@
             curaga5Amount.Value = config.curaga5Amount;
 
             curagaCurePercentage.Value = config.curagaCurePercentage;
-            curagaPercentageValueLabel.Text = config.curagaCurePercentage.ToString(CultureInfo.InvariantCulture);
+            curagaPercentageValueLabel.Text = config.curagaCurePercentage.ToString ( CultureInfo.InvariantCulture );
             curagaTargetType.SelectedIndex = config.curagaTargetType;
             curagaTargetName.Text = config.curagaTargetName;
             requiredCuragaNumbers.Value = config.curagaRequiredMembers;
@@ -3364,10 +3455,19 @@
 
             // BASIC ENHANCING
             autoHasteMinutes.Value = config.autoHasteMinutes;
+            if ( config.autoAdloquiumMinutes != 0 )
+            {
+                autoAdloquium_Minutes.Value = config.autoAdloquiumMinutes;
+            }
+            else
+            {
+                config.autoAdloquiumMinutes = 2;
+                autoAdloquium_Minutes.Value = 2;
+            }
             autoProtect_Minutes.Value = config.autoProtect_Minutes;
             autoShell_Minutes.Value = config.autoShellMinutes;
             autoPhalanxIIMinutes.Value = config.autoPhalanxIIMinutes;
-            if (config.autoStormspellMinutes == 0)
+            if ( config.autoStormspellMinutes == 0 )
             {
                 autoStormspellMinutes.Value = 3;
             }
@@ -3392,68 +3492,83 @@
 
 
             plRegen.Checked = config.plRegen;
-            if (config.plRegen_Level == 1 && plRegen.Checked == true)
+            if ( config.plRegen_Level == 1 && plRegen.Checked == true )
             {
                 plRegenLevel1.Checked = true;
             }
-            else if (config.plRegen_Level == 2 && plRegen.Checked == true)
+            else if ( config.plRegen_Level == 2 && plRegen.Checked == true )
             {
                 plRegenLevel2.Checked = true;
             }
-            else if (config.plRegen_Level == 3 && plRegen.Checked == true)
+            else if ( config.plRegen_Level == 3 && plRegen.Checked == true )
             {
                 plRegenLevel3.Checked = true;
             }
-            else if (config.plRegen_Level == 4 && plRegen.Checked == true)
+            else if ( config.plRegen_Level == 4 && plRegen.Checked == true )
             {
                 plRegenLevel4.Checked = true;
             }
-            else if (config.plRegen_Level == 5 && plRegen.Checked == true)
+            else if ( config.plRegen_Level == 5 && plRegen.Checked == true )
             {
                 plRegenLevel5.Checked = true;
             }
 
             plReraise.Checked = config.plReraise;
-            if (config.plReraise_Level == 1 && plReraise.Checked == true)
+            if ( config.plReraise_Level == 1 && plReraise.Checked == true )
             {
                 plReraiseLevel1.Checked = true;
             }
-            else if (config.plReraise_Level == 2 && plReraise.Checked == true)
+            else if ( config.plReraise_Level == 2 && plReraise.Checked == true )
             {
                 plReraiseLevel2.Checked = true;
             }
-            else if (config.plReraise_Level == 3 && plReraise.Checked == true)
+            else if ( config.plReraise_Level == 3 && plReraise.Checked == true )
             {
                 plReraiseLevel3.Checked = true;
             }
-            else if (config.plReraise_Level == 4 && plReraise.Checked == true)
+            else if ( config.plReraise_Level == 4 && plReraise.Checked == true )
             {
                 plReraiseLevel4.Checked = true;
             }
             plRefresh.Checked = config.plRefresh;
-            if (config.plRefresh_Level == 1 && plRefresh.Checked == true)
+            if ( config.plRefresh_Level == 1 && plRefresh.Checked == true )
             {
                 plRefreshLevel1.Checked = true;
             }
-            else if (config.plRefresh_Level == 2 && plRefresh.Checked == true)
+            else if ( config.plRefresh_Level == 2 && plRefresh.Checked == true )
             {
                 plRefreshLevel2.Checked = true;
             }
-            else if (config.plRefresh_Level == 3 && plRefresh.Checked == true)
+            else if ( config.plRefresh_Level == 3 && plRefresh.Checked == true )
             {
                 plRefreshLevel3.Checked = true;
             }
             plStoneskin.Checked = config.plStoneskin;
             plPhalanx.Checked = config.plPhalanx;
             plTemper.Checked = config.plTemper;
-            if (config.plTemper_Level == 1 && plTemper.Checked == true)
+            if ( config.plTemper_Level == 1 && plTemper.Checked == true )
             {
                 plTemperLevel1.Checked = true;
             }
-            else if (config.plTemper_Level == 2 && plTemper.Checked == true)
+            else if ( config.plTemper_Level == 2 && plTemper.Checked == true )
             {
                 plTemperLevel2.Checked = true;
             }
+
+            plHaste.Checked = config.plHaste;
+            if ( config.plHaste_Level == 1 && plHaste.Checked == true )
+            {
+                plHasteLevel1.Checked = true;
+            }
+            else if ( config.plHaste_Level == 2 && plHaste.Checked == true )
+            {
+                plHasteLevel2.Checked = true;
+            }
+
+            plSpikes.Checked = config.plSpikes;
+            plSpikes_Spell.SelectedIndex = config.plSpikes_Spell;
+
+
             plEnspell.Checked = config.plEnspell;
             plEnspell_spell.SelectedIndex = config.plEnspell_Spell;
             plGainBoost.Checked = config.plGainBoost;
@@ -3461,7 +3576,7 @@
             EntrustBox.Checked = config.Entrust;
             DematerializeBox.Checked = config.Dematerialize;
             plBarElement.Checked = config.plBarElement;
-            if (config.plBarElement_Spell > 5)
+            if ( config.plBarElement_Spell > 5 )
             {
                 plBarElement_Spell.SelectedIndex = 0;
                 config.plBarElement_Spell = 0; ;
@@ -3472,7 +3587,7 @@
             }
             AOE_Barelemental.Checked = config.AOE_Barelemental;
             plBarStatus.Checked = config.plBarStatus;
-            if (config.plBarStatus_Spell > 8)
+            if ( config.plBarStatus_Spell > 8 )
             {
                 plBarStatus_Spell.SelectedIndex = 0;
                 config.plBarStatus_Spell = 0; ;
@@ -3627,6 +3742,7 @@
             plThrenody.Checked = config.plThrenody;
             plVitDown.Checked = config.plVitDown;
             plWeight.Checked = config.plWeight;
+            plAmnesia.Checked = config.plAmnesia;
 
             monitoredDebuffEnabled.Checked = config.monitoredDebuffEnabled;
             plProtectra.Checked = config.plProtectra;
@@ -3679,6 +3795,7 @@
             monitoredThrenody.Checked = config.monitoredThrenody;
             monitoredVitDown.Checked = config.monitoredVitDown;
             monitoredWeight.Checked = config.monitoredWeight;
+            monitoredAmnesia.Checked = config.monitoredAmnesia;
 
             naSpellsenable.Checked = config.enablePartyDebuffRemoval;
             SpecifiednaSpellsenable.Checked = config.SpecifiednaSpellsenable;
@@ -3692,6 +3809,8 @@
             naPoison.Checked = config.naPoison;
             naSilence.Checked = config.naSilence;
             naErase.Checked = config.naErase;
+            Esuna.Checked = config.Esuna;
+            EsunaOnlyAmnesia.Checked = config.EsunaOnlyAmnesia;
 
             na_Weight.Checked = config.na_Weight;
             na_VitDown.Checked = config.na_VitDown;
@@ -3738,6 +3857,9 @@
 
             AssistSpecifiedTarget.Checked = config.AssistSpecifiedTarget;
 
+            DisableTargettingCancel.Checked = config.DisableTargettingCancel;
+            TargetRemoval_Delay.Value = config.TargetRemoval_Delay;
+
             acceptRaise.Checked = config.AcceptRaise;
             acceptRaiseOnlyWhenNotInCombat.Checked = config.AcceptRaiseOnlyWhenNotInCombat;
 
@@ -3769,6 +3891,7 @@
             Overcure.Checked = config.Overcure;
             Undercure.Checked = config.Undercure;
             enableMonitoredPriority.Checked = config.enableMonitoredPriority;
+            enableOutOfPartyHealing.Checked = config.enableOutOfPartyHealing;
             OvercureOnHighPriority.Checked = config.OvercureOnHighPriority;
 
             enableAddOn.Checked = config.EnableAddOn;
@@ -3784,6 +3907,7 @@
             autoFollowDistance.Value = config.autoFollowDistance;
             autoFollow_Warning.Checked = config.autoFollow_Warning;
             FFXIDefaultAutoFollow.Checked = config.FFXIDefaultAutoFollow;
+            enableHotKeys.Checked = config.enableHotKeys;
 
             ipAddress.Text = config.ipAddress;
             listeningPort.Text = config.listeningPort;
@@ -3792,18 +3916,12 @@
             trackCastingPackets.Checked = config.trackCastingPackets;
         }
 
-        private void autoAdjust_Cure_Click(object sender, EventArgs e)
+        private void autoAdjust_Cure_Click ( object sender, EventArgs e )
         {
             //decimal level = this.cureLevel.Value;
             double potency = System.Convert.ToDouble(curePotency.Value);
 
-            List<SkillCaps> caps = new List<SkillCaps>();
-
-            // WHM A+
-            // SCH B+
-            // RDM C-
-
-            if (Form1._ELITEAPIPL != null)
+            if ( Form1._ELITEAPIPL != null )
             {
                 // First calculate default potency
 
@@ -3821,295 +3939,295 @@
 
                 double Cure = 0;
 
-                if (Power >= 0 && Power < 20)
+                if ( Power >= 0 && Power < 20 )
                 {
-                    Cure = (0 + Power) - 0;
-                    Cure = Cure / 1;
-                    Cure = Math.Floor(Cure + 10);
+                    Cure = ( 0 + Power ) - 0;
+                    Cure /= 1;
+                    Cure = Math.Floor ( Cure + 10 );
                 }
-                else if (Power >= 20 && Power < 40)
+                else if ( Power >= 20 && Power < 40 )
                 {
-                    Cure = (0 + Power) - 20;
-                    Cure = Cure / 1.33;
-                    Cure = Math.Floor(Cure + 15);
+                    Cure = ( 0 + Power ) - 20;
+                    Cure /= 1.33;
+                    Cure = Math.Floor ( Cure + 15 );
                 }
-                else if (Power >= 40 && Power < 125)
+                else if ( Power >= 40 && Power < 125 )
                 {
-                    Cure = (0 + Power) - 40;
-                    Cure = Cure / 8.5;
-                    Cure = Math.Floor(Cure + 30);
+                    Cure = ( 0 + Power ) - 40;
+                    Cure /= 8.5;
+                    Cure = Math.Floor ( Cure + 30 );
                 }
-                else if (Power >= 125 && Power < 200)
+                else if ( Power >= 125 && Power < 200 )
                 {
-                    Cure = (0 + Power) - 125;
-                    Cure = Cure / 8.5;
-                    Cure = Math.Floor(Cure + 40);
+                    Cure = ( 0 + Power ) - 125;
+                    Cure /= 8.5;
+                    Cure = Math.Floor ( Cure + 40 );
                 }
-                else if (Power >= 200 && Power < 600)
+                else if ( Power >= 200 && Power < 600 )
                 {
-                    Cure = (0 + Power) - 200;
-                    Cure = Cure / 20;
-                    Cure = Math.Floor(Cure + 45);
+                    Cure = ( 0 + Power ) - 200;
+                    Cure /= 20;
+                    Cure = Math.Floor ( Cure + 45 );
                 }
-                else if (Power >= 600)
+                else if ( Power >= 600 )
                 {
                     Cure = 65;
                 }
 
                 double Cure_pot = Cure * 00.01;
-                Cure_pot = Cure_pot * potency;
+                Cure_pot *= potency;
 
                 double Cure_mathed = Math.Round(Cure + Cure_pot);
-                Cure_mathed = Cure_mathed - (Cure_mathed * 0.10);
+                Cure_mathed -= ( Cure_mathed * 0.10 );
 
                 double Cure2 = 0;
 
-                if (Power >= 40 && Power < 70)
+                if ( Power >= 40 && Power < 70 )
                 {
-                    Cure2 = (0 + Power) - 40;
-                    Cure2 = Cure2 / 1;
-                    Cure2 = Math.Floor(Cure2 + 60);
+                    Cure2 = ( 0 + Power ) - 40;
+                    Cure2 /= 1;
+                    Cure2 = Math.Floor ( Cure2 + 60 );
                 }
-                else if (Power >= 70 && Power < 125)
+                else if ( Power >= 70 && Power < 125 )
                 {
-                    Cure2 = (0 + Power) - 70;
-                    Cure2 = Cure2 / 5.5;
-                    Cure2 = Math.Floor(Cure2 + 90);
+                    Cure2 = ( 0 + Power ) - 70;
+                    Cure2 /= 5.5;
+                    Cure2 = Math.Floor ( Cure2 + 90 );
                 }
-                else if (Power >= 125 && Power < 200)
+                else if ( Power >= 125 && Power < 200 )
                 {
-                    Cure2 = (0 + Power) - 125;
-                    Cure2 = Cure2 / 7.5;
-                    Cure2 = Math.Floor(Cure2 + 100);
+                    Cure2 = ( 0 + Power ) - 125;
+                    Cure2 /= 7.5;
+                    Cure2 = Math.Floor ( Cure2 + 100 );
                 }
-                else if (Power >= 200 && Power < 400)
+                else if ( Power >= 200 && Power < 400 )
                 {
-                    Cure2 = (0 + Power) - 200;
-                    Cure2 = Cure2 / 10;
-                    Cure2 = Math.Floor(Cure2 + 110);
+                    Cure2 = ( 0 + Power ) - 200;
+                    Cure2 /= 10;
+                    Cure2 = Math.Floor ( Cure2 + 110 );
                 }
-                else if (Power >= 400 && Power < 700)
+                else if ( Power >= 400 && Power < 700 )
                 {
-                    Cure2 = (0 + Power) - 400;
-                    Cure2 = Cure2 / 20;
-                    Cure2 = Math.Floor(Cure2 + 130);
+                    Cure2 = ( 0 + Power ) - 400;
+                    Cure2 /= 20;
+                    Cure2 = Math.Floor ( Cure2 + 130 );
                 }
-                else if (Power >= 700)
+                else if ( Power >= 700 )
                 {
                     Cure2 = 145;
                 }
 
                 double Cure2_pot = Cure2 * 00.01;
-                Cure2_pot = Cure2_pot * potency;
+                Cure2_pot *= potency;
 
                 double Cure2_mathed = Math.Round(Cure2 + Cure2_pot);
-                Cure2_mathed = Cure2_mathed - (Cure2_mathed * 0.10);
+                Cure2_mathed -= ( Cure2_mathed * 0.10 );
 
                 double Cure3 = 0;
 
-                if (Power >= 70 && Power < 125)
+                if ( Power >= 70 && Power < 125 )
                 {
-                    Cure3 = (0 + Power) - 70;
-                    Cure3 = Cure3 / 2.2;
-                    Cure3 = Math.Floor(Cure3 + 130);
+                    Cure3 = ( 0 + Power ) - 70;
+                    Cure3 /= 2.2;
+                    Cure3 = Math.Floor ( Cure3 + 130 );
                 }
-                else if (Power >= 125 && Power < 200)
+                else if ( Power >= 125 && Power < 200 )
                 {
-                    Cure3 = (0 + Power) - 125;
-                    Cure3 = Cure3 / 1.15;
-                    Cure3 = Math.Floor(Cure3 + 155);
+                    Cure3 = ( 0 + Power ) - 125;
+                    Cure3 /= 1.15;
+                    Cure3 = Math.Floor ( Cure3 + 155 );
                 }
-                else if (Power >= 200 && Power < 300)
+                else if ( Power >= 200 && Power < 300 )
                 {
-                    Cure3 = (0 + Power) - 200;
-                    Cure3 = Cure3 / 2.5;
-                    Cure3 = Math.Floor(Cure3 + 220);
+                    Cure3 = ( 0 + Power ) - 200;
+                    Cure3 /= 2.5;
+                    Cure3 = Math.Floor ( Cure3 + 220 );
                 }
-                else if (Power >= 300 && Power < 700)
+                else if ( Power >= 300 && Power < 700 )
                 {
-                    Cure3 = (0 + Power) - 300;
-                    Cure3 = Cure3 / 5;
-                    Cure3 = Math.Floor(Cure3 + 260);
+                    Cure3 = ( 0 + Power ) - 300;
+                    Cure3 /= 5;
+                    Cure3 = Math.Floor ( Cure3 + 260 );
                 }
-                else if (Power >= 700)
+                else if ( Power >= 700 )
                 {
                     Cure3 = 340;
                 }
 
                 double Cure3_pot = Cure3 * 00.01;
-                Cure3_pot = Cure3_pot * potency;
+                Cure3_pot *= potency;
 
                 double Cure3_mathed = Math.Round(Cure3 + Cure3_pot);
-                Cure3_mathed = Cure3_mathed - (Cure3_mathed * 0.10);
+                Cure3_mathed -= ( Cure3_mathed * 0.10 );
 
                 double Cure4 = 0;
 
-                if (Power >= 70 && Power < 200)
+                if ( Power >= 70 && Power < 200 )
                 {
-                    Cure4 = (0 + Power) - 70;
-                    Cure4 = Cure4 / 1;
-                    Cure4 = Math.Floor(Cure4 + 270);
+                    Cure4 = ( 0 + Power ) - 70;
+                    Cure4 /= 1;
+                    Cure4 = Math.Floor ( Cure4 + 270 );
                 }
-                else if (Power >= 200 && Power < 300)
+                else if ( Power >= 200 && Power < 300 )
                 {
-                    Cure4 = (0 + Power) - 200;
-                    Cure4 = Cure4 / 2;
-                    Cure4 = Math.Floor(Cure4 + 400);
+                    Cure4 = ( 0 + Power ) - 200;
+                    Cure4 /= 2;
+                    Cure4 = Math.Floor ( Cure4 + 400 );
                 }
-                else if (Power >= 300 && Power < 400)
+                else if ( Power >= 300 && Power < 400 )
                 {
-                    Cure4 = (0 + Power) - 300;
-                    Cure4 = Cure4 / 1.43;
-                    Cure4 = Math.Floor(Cure4 + 450);
+                    Cure4 = ( 0 + Power ) - 300;
+                    Cure4 /= 1.43;
+                    Cure4 = Math.Floor ( Cure4 + 450 );
                 }
-                else if (Power >= 400 && Power < 700)
+                else if ( Power >= 400 && Power < 700 )
                 {
-                    Cure4 = (0 + Power) - 400;
-                    Cure4 = Cure4 / 2.5;
-                    Cure4 = Math.Floor(Cure4 + 520);
+                    Cure4 = ( 0 + Power ) - 400;
+                    Cure4 /= 2.5;
+                    Cure4 = Math.Floor ( Cure4 + 520 );
                 }
-                else if (Power >= 700)
+                else if ( Power >= 700 )
                 {
                     Cure4 = 640;
                 }
 
                 double Cure4_pot = Cure4 * 00.01;
-                Cure4_pot = Cure4_pot * potency;
+                Cure4_pot *= potency;
 
                 double Cure4_mathed = Math.Round(Cure4 + Cure4_pot);
-                Cure4_mathed = Cure4_mathed - (Cure4_mathed * 0.10);
+                Cure4_mathed -= ( Cure4_mathed * 0.10 );
 
                 double Cure5 = 0;
 
-                if (Power >= 80 && Power < 150)
+                if ( Power >= 80 && Power < 150 )
                 {
-                    Cure5 = (0 + Power) - 80;
-                    Cure5 = Cure5 / 0.7;
-                    Cure5 = Math.Floor(Cure5 + 450);
+                    Cure5 = ( 0 + Power ) - 80;
+                    Cure5 /= 0.7;
+                    Cure5 = Math.Floor ( Cure5 + 450 );
                 }
-                else if (Power >= 150 && Power < 190)
+                else if ( Power >= 150 && Power < 190 )
                 {
-                    Cure5 = (0 + Power) - 150;
-                    Cure5 = Cure5 / 1.25;
-                    Cure5 = Math.Floor(Cure5 + 550);
+                    Cure5 = ( 0 + Power ) - 150;
+                    Cure5 /= 1.25;
+                    Cure5 = Math.Floor ( Cure5 + 550 );
                 }
-                else if (Power >= 190 && Power < 260)
+                else if ( Power >= 190 && Power < 260 )
                 {
-                    Cure5 = (0 + Power) - 190;
-                    Cure5 = Cure5 / 1.84;
-                    Cure5 = Math.Floor(Cure5 + 582);
+                    Cure5 = ( 0 + Power ) - 190;
+                    Cure5 /= 1.84;
+                    Cure5 = Math.Floor ( Cure5 + 582 );
                 }
-                else if (Power >= 260 && Power < 300)
+                else if ( Power >= 260 && Power < 300 )
                 {
-                    Cure5 = (0 + Power) - 260;
-                    Cure5 = Cure5 / 2;
-                    Cure5 = Math.Floor(Cure5 + 620);
+                    Cure5 = ( 0 + Power ) - 260;
+                    Cure5 /= 2;
+                    Cure5 = Math.Floor ( Cure5 + 620 );
                 }
-                else if (Power >= 300 && Power < 500)
+                else if ( Power >= 300 && Power < 500 )
                 {
-                    Cure5 = (0 + Power) - 300;
-                    Cure5 = Cure5 / 2.5;
-                    Cure5 = Math.Floor(Cure5 + 640);
+                    Cure5 = ( 0 + Power ) - 300;
+                    Cure5 /= 2.5;
+                    Cure5 = Math.Floor ( Cure5 + 640 );
                 }
-                else if (Power >= 500 && Power < 700)
+                else if ( Power >= 500 && Power < 700 )
                 {
-                    Cure5 = (0 + Power) - 500;
-                    Cure5 = Cure5 / 3.33;
-                    Cure5 = Math.Floor(Cure5 + 720);
+                    Cure5 = ( 0 + Power ) - 500;
+                    Cure5 /= 3.33;
+                    Cure5 = Math.Floor ( Cure5 + 720 );
                 }
-                else if (Power >= 700)
+                else if ( Power >= 700 )
                 {
                     Cure5 = 780;
                 }
 
                 double Cure5_pot = Cure5 * 00.01;
-                Cure5_pot = Cure5_pot * potency;
+                Cure5_pot *= potency;
 
                 double Cure5_mathed = Math.Round(Cure5 + Cure5_pot);
-                Cure5_mathed = Cure5_mathed - (Cure5_mathed * 0.10);
+                Cure5_mathed -= ( Cure5_mathed * 0.10 );
 
                 double Cure6 = 0;
 
-                if (Power >= 90 && Power < 210)
+                if ( Power >= 90 && Power < 210 )
                 {
-                    Cure6 = (0 + Power) - 90;
-                    Cure6 = Cure6 / 1.5;
-                    Cure6 = Math.Floor(Cure6 + 600);
+                    Cure6 = ( 0 + Power ) - 90;
+                    Cure6 /= 1.5;
+                    Cure6 = Math.Floor ( Cure6 + 600 );
                 }
-                else if (Power >= 210 && Power < 300)
+                else if ( Power >= 210 && Power < 300 )
                 {
-                    Cure6 = (0 + Power) - 210;
-                    Cure6 = Cure6 / 0.9;
-                    Cure6 = Math.Floor(Cure6 + 680);
+                    Cure6 = ( 0 + Power ) - 210;
+                    Cure6 /= 0.9;
+                    Cure6 = Math.Floor ( Cure6 + 680 );
                 }
-                else if (Power >= 300 && Power < 400)
+                else if ( Power >= 300 && Power < 400 )
                 {
-                    Cure6 = (0 + Power) - 300;
-                    Cure6 = Cure6 / 1.43;
-                    Cure6 = Math.Floor(Cure6 + 780);
+                    Cure6 = ( 0 + Power ) - 300;
+                    Cure6 /= 1.43;
+                    Cure6 = Math.Floor ( Cure6 + 780 );
                 }
-                else if (Power >= 400 && Power < 500)
+                else if ( Power >= 400 && Power < 500 )
                 {
-                    Cure6 = (0 + Power) - 400;
-                    Cure6 = Cure6 / 2.5;
-                    Cure6 = Math.Floor(Cure6 + 850);
+                    Cure6 = ( 0 + Power ) - 400;
+                    Cure6 /= 2.5;
+                    Cure6 = Math.Floor ( Cure6 + 850 );
                 }
-                else if (Power >= 500 && Power < 700)
+                else if ( Power >= 500 && Power < 700 )
                 {
-                    Cure6 = (0 + Power) - 500;
-                    Cure6 = Cure6 / 1.67;
-                    Cure6 = Math.Floor(Cure6 + 890);
+                    Cure6 = ( 0 + Power ) - 500;
+                    Cure6 /= 1.67;
+                    Cure6 = Math.Floor ( Cure6 + 890 );
                 }
-                else if (Power >= 700)
+                else if ( Power >= 700 )
                 {
                     Cure6 = 1010;
                 }
 
                 double Cure6_pot = Cure6 * 00.01;
-                Cure6_pot = Cure6_pot * potency;
+                Cure6_pot *= potency;
 
                 double Cure6_mathed = Math.Round(Cure6 + Cure6_pot);
-                Cure6_mathed = Cure6_mathed - (Cure6_mathed * 0.10);
+                Cure6_mathed -= ( Cure6_mathed * 0.10 );
 
-                cure1amount.Value = Convert.ToDecimal(Cure_mathed);
-                cure2amount.Value = Convert.ToDecimal(Cure2_mathed);
-                cure3amount.Value = Convert.ToDecimal(Cure3_mathed);
-                cure4amount.Value = Convert.ToDecimal(Cure4_mathed);
-                cure5amount.Value = Convert.ToDecimal(Cure5_mathed);
-                cure6amount.Value = Convert.ToDecimal(Cure6_mathed);
+                cure1amount.Value = Convert.ToDecimal ( Cure_mathed );
+                cure2amount.Value = Convert.ToDecimal ( Cure2_mathed );
+                cure3amount.Value = Convert.ToDecimal ( Cure3_mathed );
+                cure4amount.Value = Convert.ToDecimal ( Cure4_mathed );
+                cure5amount.Value = Convert.ToDecimal ( Cure5_mathed );
+                cure6amount.Value = Convert.ToDecimal ( Cure6_mathed );
 
-                curagaAmount.Value = Convert.ToDecimal(Cure2_mathed);
-                curaga2Amount.Value = Convert.ToDecimal(Cure3_mathed);
-                curaga3Amount.Value = Convert.ToDecimal(Cure4_mathed);
-                curaga4Amount.Value = Convert.ToDecimal(Cure5_mathed);
-                curaga5Amount.Value = Convert.ToDecimal(Cure6_mathed);
+                curagaAmount.Value = Convert.ToDecimal ( Cure2_mathed );
+                curaga2Amount.Value = Convert.ToDecimal ( Cure3_mathed );
+                curaga3Amount.Value = Convert.ToDecimal ( Cure4_mathed );
+                curaga4Amount.Value = Convert.ToDecimal ( Cure5_mathed );
+                curaga5Amount.Value = Convert.ToDecimal ( Cure6_mathed );
             }
             else
             {
-                MessageBox.Show("Select a PL from the main screen before running this.");
+                MessageBox.Show ( "Select a PL from the main screen before running this." );
             }
         }
 
-        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        protected override bool ProcessCmdKey ( ref Message msg, Keys keyData )
         {
-            if (keyData == (Keys.Control | Keys.S))
+            if ( keyData == ( Keys.Control | Keys.S ) )
             {
-                loadButton.PerformClick();
+                loadButton.PerformClick ( );
             }
-            else if (keyData == (Keys.Control | Keys.O))
+            else if ( keyData == ( Keys.Control | Keys.O ) )
             {
-                saveAsButton.PerformClick();
+                saveAsButton.PerformClick ( );
             }
-            else if (keyData == (Keys.Escape))
+            else if ( keyData == ( Keys.Escape ) )
             {
-                button4.PerformClick();
+                button4.PerformClick ( );
             }
-            return base.ProcessCmdKey(ref msg, keyData);
+            return base.ProcessCmdKey ( ref msg, keyData );
         }
 
-        private void naErase_CheckedChanged(object sender, EventArgs e)
+        private void naErase_CheckedChanged ( object sender, EventArgs e )
         {
-            if (naErase.Checked == true)
+            if ( naErase.Checked == true )
             {
                 na_Weight.Enabled = true;
                 na_VitDown.Enabled = true;
@@ -4249,11 +4367,6 @@
                 na_AccuracyDown.Enabled = false;
                 na_AgiDown.Enabled = false;
             }
-        }
-
-        private void plBuffGroup_Enter(object sender, EventArgs e)
-        {
-
         }
     }
 }
