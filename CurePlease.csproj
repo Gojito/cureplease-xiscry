@@ -63,9 +63,26 @@
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
+  <!--
+    Buffs.xml is loaded at run time by the Party Buffs window (XElement.Load). It shipped in
+    the released build but was never in the repository, so a clone built and then threw the
+    moment that window opened.
+  -->
   <ItemGroup>
-    <Reference Include="EliteMMO.API">
-      <HintPath>.\EliteMMO.API.dll</HintPath>
+    <Content Include="Resources\Buffs.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <!--
+      XIScry replaces the abandoned EliteMMO.API / EliteAPI pair. It keeps their namespace
+      and type names, so every call site in this project is unchanged, and it reads the client
+      from outside the process: no injection, no native 32-bit DLL, no SeDebugPrivilege at
+      load. The DLL is committed beside this file, where EliteMMO.API.dll used to be.
+    -->
+    <Reference Include="XIScry">
+      <HintPath>.\XIScry.dll</HintPath>
     </Reference>
     <Reference Include="GlobalHotKey, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\GlobalHotKey.1.1.0\lib\GlobalHotKey.dll</HintPath>

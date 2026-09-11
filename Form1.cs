@@ -80,7 +80,6 @@
 
         private string debug_MSG_show = string.Empty;
 
-        private int lastCommand = 0;
 
         private int lastKnownEstablisherTarget = 0;
 
@@ -3008,7 +3007,7 @@
             if (!CheckForDLLFiles())
             {
                 MessageBox.Show(
-                    "Unable to locate EliteAPI.dll or EliteMMO.API.dll\nMake sure both files are in the same directory as the application",
+                    "Unable to locate XIScry.dll\nMake sure it is in the same directory as the application",
                     "Error");
                 return;
             }
@@ -3110,9 +3109,9 @@
                     _ELITEAPIPL.ThirdParty.SendString("//cpaddon verify");
                     if (Form2.config.enableHotKeys)
                     {
-                        _ELITEAPIPL.ThirdParty.SendString("//bind ^!F1 cureplease toggle");
-                        _ELITEAPIPL.ThirdParty.SendString("//bind ^!F2 cureplease start");
-                        _ELITEAPIPL.ThirdParty.SendString("//bind ^!F3 cureplease pause");
+                        _ELITEAPIPL.ThirdParty.SendString("//bind ^!F1 cpaddon cmd toggle");
+                        _ELITEAPIPL.ThirdParty.SendString("//bind ^!F2 cpaddon cmd start");
+                        _ELITEAPIPL.ThirdParty.SendString("//bind ^!F3 cpaddon cmd pause");
                     }
                 }
                 else if (WindowerMode == "Ashita")
@@ -3125,9 +3124,9 @@
                     _ELITEAPIPL.ThirdParty.SendString("/cpaddon verify");
                     if (Form2.config.enableHotKeys)
                     {
-                        _ELITEAPIPL.ThirdParty.SendString("/bind ^!F1 /cureplease toggle");
-                        _ELITEAPIPL.ThirdParty.SendString("/bind ^!F2 /cureplease start");
-                        _ELITEAPIPL.ThirdParty.SendString("/bind ^!F3 /cureplease pause");
+                        _ELITEAPIPL.ThirdParty.SendString("/bind ^!F1 /cpaddon cmd toggle");
+                        _ELITEAPIPL.ThirdParty.SendString("/bind ^!F2 /cpaddon cmd start");
+                        _ELITEAPIPL.ThirdParty.SendString("/bind ^!F3 /cpaddon cmd pause");
                     }
                 }
 
@@ -3145,7 +3144,7 @@
             if (!CheckForDLLFiles())
             {
                 MessageBox.Show(
-                    "Unable to locate EliteAPI.dll or EliteMMO.API.dll\nMake sure both files are in the same directory as the application",
+                    "Unable to locate XIScry.dll\nMake sure it is in the same directory as the application",
                     "Error");
                 return;
             }
@@ -3188,9 +3187,9 @@
 
                     if (Form2.config.enableHotKeys)
                     {
-                        _ELITEAPIPL.ThirdParty.SendString("//bind ^!F1 cureplease toggle");
-                        _ELITEAPIPL.ThirdParty.SendString("//bind ^!F2 cureplease start");
-                        _ELITEAPIPL.ThirdParty.SendString("//bind ^!F3 cureplease pause");
+                        _ELITEAPIPL.ThirdParty.SendString("//bind ^!F1 cpaddon cmd toggle");
+                        _ELITEAPIPL.ThirdParty.SendString("//bind ^!F2 cpaddon cmd start");
+                        _ELITEAPIPL.ThirdParty.SendString("//bind ^!F3 cpaddon cmd pause");
                     }
                 }
                 else if (WindowerMode == "Ashita")
@@ -3202,9 +3201,9 @@
                     _ELITEAPIPL.ThirdParty.SendString("/cpaddon verify");
                     if (Form2.config.enableHotKeys)
                     {
-                        _ELITEAPIPL.ThirdParty.SendString("/bind ^!F1 /cureplease toggle");
-                        _ELITEAPIPL.ThirdParty.SendString("/bind ^!F2 /cureplease start");
-                        _ELITEAPIPL.ThirdParty.SendString("/bind ^!F3 /cureplease pause");
+                        _ELITEAPIPL.ThirdParty.SendString("/bind ^!F1 /cpaddon cmd toggle");
+                        _ELITEAPIPL.ThirdParty.SendString("/bind ^!F2 /cpaddon cmd start");
+                        _ELITEAPIPL.ThirdParty.SendString("/bind ^!F3 /cpaddon cmd pause");
                     }
                 }
 
@@ -3214,17 +3213,14 @@
 
                 AddOnStatus_Click(sender, e);
 
-                lastCommand = _ELITEAPIMonitored.ThirdParty.ConsoleIsNewCommand();
             }
         }
 
         private bool CheckForDLLFiles()
         {
-            if (!File.Exists("eliteapi.dll") || !File.Exists("elitemmo.api.dll"))
-            {
-                return false;
-            }
-            return true;
+            string folder = Path.GetDirectoryName(Application.ExecutablePath) ?? string.Empty;
+
+            return File.Exists(Path.Combine(folder, "XIScry.dll"));
         }
 
         private string CureTiers(string cureSpell, bool HP)
@@ -5105,13 +5101,32 @@
             }
         }
 
+        /// <summary>
+        /// Whether the PL can cast on a party member: alive, and not obviously out of reach.
+        /// </summary>
+        /// <remarks>
+        /// The distance no longer has to be greater than zero. An entity the client has not
+        /// rendered reports 0 with real coordinates, and a party member standing beside the PL
+        /// read 0 on 2026-09-11, which made this false forever and stopped every buff on
+        /// anyone but the PL itself. Zero means "not answered", so it is not evidence of being
+        /// out of range, and the game refuses an out-of-range cast on its own.
+        /// </remarks>
         private bool castingPossible(byte partyMemberId)
         {
-            if ((_ELITEAPIPL.Entity.GetEntity((int)_ELITEAPIMonitored.Party.GetPartyMembers()[partyMemberId].TargetIndex).Distance < 21) && (_ELITEAPIPL.Entity.GetEntity((int)_ELITEAPIMonitored.Party.GetPartyMembers()[partyMemberId].TargetIndex).Distance > 0) && (_ELITEAPIMonitored.Party.GetPartyMembers()[partyMemberId].CurrentHP > 0) || (_ELITEAPIPL.Party.GetPartyMember(0).ID == _ELITEAPIMonitored.Party.GetPartyMembers()[partyMemberId].ID) && (_ELITEAPIMonitored.Party.GetPartyMembers()[partyMemberId].CurrentHP > 0))
+            EliteAPI.PartyMember member = _ELITEAPIMonitored.Party.GetPartyMembers()[partyMemberId];
+
+            if (member.CurrentHP == 0)
+            {
+                return false;
+            }
+
+            // Yourself: no distance to check.
+            if (_ELITEAPIPL.Party.GetPartyMember(0).ID == member.ID)
             {
                 return true;
             }
-            return false;
+
+            return _ELITEAPIPL.Entity.GetEntity((int)member.TargetIndex).Distance < 21;
         }
 
         private bool plStatusCheck(StatusEffect requestedStatus)
@@ -7991,9 +8006,9 @@
                         Thread.Sleep(100);
                         if (Form2.config.enableHotKeys)
                         {
-                            _ELITEAPIPL.ThirdParty.SendString("//bind ^!F1 cureplease toggle");
-                            _ELITEAPIPL.ThirdParty.SendString("//bind ^!F2 cureplease start");
-                            _ELITEAPIPL.ThirdParty.SendString("//bind ^!F3 cureplease pause");
+                            _ELITEAPIPL.ThirdParty.SendString("//bind ^!F1 cpaddon cmd toggle");
+                            _ELITEAPIPL.ThirdParty.SendString("//bind ^!F2 cpaddon cmd start");
+                            _ELITEAPIPL.ThirdParty.SendString("//bind ^!F3 cpaddon cmd pause");
                         }
                     }
                     else if (WindowerMode == "Ashita")
@@ -8004,9 +8019,9 @@
                         Thread.Sleep(100);
                         if (Form2.config.enableHotKeys)
                         {
-                            _ELITEAPIPL.ThirdParty.SendString("/bind ^!F1 /cureplease toggle");
-                            _ELITEAPIPL.ThirdParty.SendString("/bind ^!F2 /cureplease start");
-                            _ELITEAPIPL.ThirdParty.SendString("/bind ^!F3 /cureplease pause");
+                            _ELITEAPIPL.ThirdParty.SendString("/bind ^!F1 /cpaddon cmd toggle");
+                            _ELITEAPIPL.ThirdParty.SendString("/bind ^!F2 /cpaddon cmd start");
+                            _ELITEAPIPL.ThirdParty.SendString("/bind ^!F3 /cpaddon cmd pause");
                         }
                     }
 
@@ -8485,6 +8500,22 @@
             }
         }
 
+        /// <summary>
+        /// Whether the game cannot be read right now: a client not attached, or one mid-zone.
+        /// </summary>
+        /// <remarks>
+        /// XIScry refuses a read while a client rebuilds its world, where EliteAPI returned
+        /// rubbish instead, so a handler that touches the game without asking this first
+        /// crashes on every zone. The handlers that already guard do it inline; these three
+        /// had nothing, because nothing used to be needed.
+        /// </remarks>
+        private bool GameNotReadable()
+        {
+            return _ELITEAPIPL == null || _ELITEAPIMonitored == null
+                || _ELITEAPIPL.Player.LoginStatus == (int)LoginStatus.Loading
+                || _ELITEAPIMonitored.Player.LoginStatus == (int)LoginStatus.Loading;
+        }
+
         private void resetSongTimer_Tick(object sender, EventArgs e)
         {
             song_casting = 0;
@@ -8492,6 +8523,11 @@
 
         private void checkSCHCharges_Tick(object sender, EventArgs e)
         {
+            if (GameNotReadable())
+            {
+                return;
+            }
+
             if (_ELITEAPIPL != null && _ELITEAPIMonitored != null)
             {
                 int MainJob = _ELITEAPIPL.Player.MainJob;
@@ -8616,7 +8652,7 @@
 
         private void EclipticTimer_Tick(object sender, EventArgs e)
         {
-            if (_ELITEAPIMonitored == null || _ELITEAPIPL == null) { return; }
+            if (GameNotReadable()) { return; }
 
             if (_ELITEAPIPL.Player.Pet.HealthPercent >= 1)
             {
@@ -8867,99 +8903,20 @@
             WindowState = FormWindowState.Normal;
         }
 
+        /// <summary>
+        /// Was the injected console: the monitored client's /cureplease command, polled here.
+        /// </summary>
+        /// <remarks>
+        /// EliteAPI read that console from inside the game process. XIScry reads the client
+        /// from outside, where no such console exists, so this cannot be ported and is empty
+        /// rather than broken. The same three commands arrive over UDP from the addon as
+        /// CUREPLEASE_command_start|stop|toggle, handled in AddonReader_DoWork, and the hotkeys
+        /// now send /cpaddon cmd so they reach it.
+        ///
+        /// The handler stays wired so the designer keeps building.
+        /// </remarks>
         private void CheckCustomActions_TickAsync(object sender, EventArgs e)
         {
-            if (_ELITEAPIPL != null && _ELITEAPIMonitored != null)
-            {
-
-                int cmdTime = _ELITEAPIMonitored.ThirdParty.ConsoleIsNewCommand();
-
-                if (lastCommand != cmdTime)
-                {
-                    lastCommand = cmdTime;
-
-                    if (_ELITEAPIMonitored.ThirdParty.ConsoleGetArg(0) == "cureplease")
-                    {
-                        int argCount = _ELITEAPIMonitored.ThirdParty.ConsoleGetArgCount();
-
-                        // 0 = cureplease or cp so ignore
-                        // 1 = command to run
-                        // 2 = (if set) PL's name
-
-                        if (argCount >= 3)
-                        {
-                            if ((_ELITEAPIMonitored.ThirdParty.ConsoleGetArg(1) == "stop" || _ELITEAPIMonitored.ThirdParty.ConsoleGetArg(1) == "pause") && _ELITEAPIPL.Player.Name == _ELITEAPIMonitored.ThirdParty.ConsoleGetArg(2))
-                            {
-                                pauseButton.Text = "Paused!";
-                                pauseButton.ForeColor = Color.Red;
-                                actionTimer.Enabled = false;
-                                ActiveBuffs.Clear();
-                                pauseActions = true;
-                                song_casting = 0;
-                                ForceSongRecast = true;
-                                if (Form2.config.FFXIDefaultAutoFollow == false)
-                                {
-                                    _ELITEAPIPL.AutoFollow.IsAutoFollowing = false;
-                                }
-                            }
-                            else if ((_ELITEAPIMonitored.ThirdParty.ConsoleGetArg(1) == "unpause" || _ELITEAPIMonitored.ThirdParty.ConsoleGetArg(1) == "start") && _ELITEAPIPL.Player.Name.ToLower() == _ELITEAPIMonitored.ThirdParty.ConsoleGetArg(2).ToLower())
-                            {
-                                pauseButton.Text = "Pause";
-                                pauseButton.ForeColor = Color.Black;
-                                actionTimer.Enabled = true;
-                                pauseActions = false;
-                                song_casting = 0;
-                                ForceSongRecast = true;
-                            }
-                            else if ((_ELITEAPIMonitored.ThirdParty.ConsoleGetArg(1) == "toggle") && _ELITEAPIPL.Player.Name.ToLower() == _ELITEAPIMonitored.ThirdParty.ConsoleGetArg(2).ToLower())
-                            {
-                                pauseButton.PerformClick();
-                            }
-                            else
-                            {
-
-                            }
-                        }
-                        else if (argCount < 3)
-                        {
-                            if (_ELITEAPIMonitored.ThirdParty.ConsoleGetArg(1) == "stop" || _ELITEAPIMonitored.ThirdParty.ConsoleGetArg(1) == "pause")
-                            {
-                                pauseButton.Text = "Paused!";
-                                pauseButton.ForeColor = Color.Red;
-                                actionTimer.Enabled = false;
-                                ActiveBuffs.Clear();
-                                pauseActions = true;
-                                song_casting = 0;
-                                ForceSongRecast = true;
-                                if (Form2.config.FFXIDefaultAutoFollow == false)
-                                {
-                                    _ELITEAPIPL.AutoFollow.IsAutoFollowing = false;
-                                }
-                            }
-                            else if (_ELITEAPIMonitored.ThirdParty.ConsoleGetArg(1) == "unpause" || _ELITEAPIMonitored.ThirdParty.ConsoleGetArg(1) == "start")
-                            {
-                                pauseButton.Text = "Pause";
-                                pauseButton.ForeColor = Color.Black;
-                                actionTimer.Enabled = true;
-                                pauseActions = false;
-                                song_casting = 0;
-                                ForceSongRecast = true;
-                            }
-                            else if (_ELITEAPIMonitored.ThirdParty.ConsoleGetArg(1) == "toggle")
-                            {
-                                pauseButton.PerformClick();
-                            }
-                            else
-                            {
-                            }
-                        }
-                        else
-                        {
-                            // DO NOTHING
-                        }
-                    }
-                }
-            }
         }
 
         public void Run_BardSongs()
@@ -9413,7 +9370,10 @@
 
         private void AddonReader_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
         {
-            if (Form2.config.EnableAddOn == true && pauseActions == false && _ELITEAPIMonitored != null && _ELITEAPIPL != null)
+            // Not gated on pauseActions: the socket has to be bound while paused, or the
+            // unpause command can never arrive over it. Nothing in the receive path touches
+            // the game, so listening while paused is safe.
+            if (Form2.config.EnableAddOn == true && _ELITEAPIMonitored != null && _ELITEAPIPL != null)
             {
 
                 bool done = false;
@@ -9558,6 +9518,10 @@
 
         private void FullCircle_Timer_Tick(object sender, EventArgs e)
         {
+            if (GameNotReadable())
+            {
+                return;
+            }
 
             if (_ELITEAPIPL.Player.Pet.HealthPercent >= 1)
             {

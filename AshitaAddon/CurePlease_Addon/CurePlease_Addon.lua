@@ -125,10 +125,12 @@ ashita.register_event('command', function(command, ntype)
     print('\31\200[\31\05Cure Please Addon\31\200]\31\207 '.. " IP address: " .. ip .. " / Port number: " .. port)
   elseif args[2] == "verify" then
     SendConfirmation()
-  elseif args[2] == "cmd" then
+  elseif (#args >= 3 and args[2] == "cmd") then
+    -- args[3], not args[1]: args[1] is the literal '/cpaddon', so this path has never
+    -- sent a command Ashita side. Windower's copy of the addon has always been correct.
     local CP_connect = assert(socket.udp())
     CP_connect:settimeout(1)
-    assert(CP_connect:sendto("CUREPLEASE_command_"..args[1]:lower(), ip, port))
+    assert(CP_connect:sendto("CUREPLEASE_command_"..args[3]:lower(), ip, port))
     CP_connect:close()
   end
   return true;
