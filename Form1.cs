@@ -5195,6 +5195,12 @@
 
                 CastingBackground_Check = true;
 
+                // Stop following now; the follow loop only re-checks between ticks.
+                if (Form2.config.followStopToCast)
+                {
+                    _ELITEAPIPL.AutoFollow.IsAutoFollowing = false;
+                }
+
                 if (Form2.config.trackCastingPackets == true && Form2.config.EnableAddOn == true)
                 {
                     if (!ProtectCasting.IsBusy) { ProtectCasting.RunWorkerAsync(); }
@@ -9158,7 +9164,7 @@
                     // GRAB THE FOLLOW TARGETS ENTITY TABLE TO CHECK DISTANCE ETC
                     EliteAPI.XiEntity followTarget = _ELITEAPIPL.Entity.GetEntity(followersTargetID);
 
-                    if (Math.Truncate(followTarget.Distance) >= (int)Form2.config.autoFollowDistance && curePlease_autofollow == false)
+                    if (followTarget.Distance >= (double)Form2.config.autoFollowDistance && curePlease_autofollow == false)
                     {
                         // THE DISTANCE IS GREATER THAN REQUIRED SO IF AUTOFOLLOW IS NOT ACTIVE THEN DEPENDING ON THE TYPE, FOLLOW
 
@@ -9200,7 +9206,7 @@
                             else if (Math.Truncate(followTarget.Distance) <= 40)
                             {
                                 // ONLY TARGET AND BEGIN FOLLOW IF TARGET IS AT THE DEFINED DISTANCE
-                                if (Math.Truncate(followTarget.Distance) >= (int)Form2.config.autoFollowDistance && Math.Truncate(followTarget.Distance) <= 48)
+                                if (followTarget.Distance >= (double)Form2.config.autoFollowDistance && followTarget.Distance <= 48)
                                 {
                                     followWarning = 0;
 
@@ -9218,58 +9224,54 @@
 
                                     if (!string.IsNullOrEmpty(FollowerTargetEntity.Name))
                                     {
-                                        while (Math.Truncate(followTarget.Distance) >= (int)Form2.config.autoFollowDistance)
+                                        while (followTarget.Distance >= (double)Form2.config.autoFollowDistance)
                                         {
+                                            if (Form2.config.followStopToCast && CastingBackground_Check)
+                                            {
+                                                _ELITEAPIPL.AutoFollow.IsAutoFollowing = false;
+                                                Thread.Sleep(TimeSpan.FromSeconds(0.03));
+                                                continue;
+                                            }
 
                                             float Player_X = _ELITEAPIPL.Player.X;
                                             float Player_Y = _ELITEAPIPL.Player.Y;
                                             float Player_Z = _ELITEAPIPL.Player.Z;
-
 
                                             if (FollowerTargetEntity.Name == _ELITEAPIMonitored.Player.Name)
                                             {
                                                 Target_X = _ELITEAPIMonitored.Player.X;
                                                 Target_Y = _ELITEAPIMonitored.Player.Y;
                                                 Target_Z = _ELITEAPIMonitored.Player.Z;
-                                                float dX = Target_X - Player_X;
-                                                float dY = Target_Y - Player_Y;
-                                                float dZ = Target_Z - Player_Z;
-
-                                                _ELITEAPIPL.AutoFollow.SetAutoFollowCoords(dX, dY, dZ);
-
-                                                _ELITEAPIPL.AutoFollow.IsAutoFollowing = true;
-                                                curePlease_autofollow = true;
-
-
-                                                lastX = _ELITEAPIPL.Player.X;
-                                                lastY = _ELITEAPIPL.Player.Y;
-                                                lastZ = _ELITEAPIPL.Player.Z;
-
-                                                Thread.Sleep(TimeSpan.FromSeconds(0.1));
                                             }
                                             else
                                             {
                                                 Target_X = FollowerTargetEntity.X;
                                                 Target_Y = FollowerTargetEntity.Y;
                                                 Target_Z = FollowerTargetEntity.Z;
-
-                                                float dX = Target_X - Player_X;
-                                                float dY = Target_Y - Player_Y;
-                                                float dZ = Target_Z - Player_Z;
-
-
-                                                _ELITEAPIPL.AutoFollow.SetAutoFollowCoords(dX, dY, dZ);
-
-                                                _ELITEAPIPL.AutoFollow.IsAutoFollowing = true;
-                                                curePlease_autofollow = true;
-
-
-                                                lastX = _ELITEAPIPL.Player.X;
-                                                lastY = _ELITEAPIPL.Player.Y;
-                                                lastZ = _ELITEAPIPL.Player.Z;
-
-                                                Thread.Sleep(TimeSpan.FromSeconds(0.1));
                                             }
+
+                                            float dX = Target_X - Player_X;
+                                            float dY = Target_Y - Player_Y;
+                                            float dZ = Target_Z - Player_Z;
+
+                                            // A cast can begin mid-iteration, so check again before moving.
+                                            if (Form2.config.followStopToCast && CastingBackground_Check)
+                                            {
+                                                _ELITEAPIPL.AutoFollow.IsAutoFollowing = false;
+                                                Thread.Sleep(TimeSpan.FromSeconds(0.03));
+                                                continue;
+                                            }
+
+                                            _ELITEAPIPL.AutoFollow.SetAutoFollowCoords(dX, dY, dZ);
+                                            _ELITEAPIPL.AutoFollow.IsAutoFollowing = true;
+                                            curePlease_autofollow = true;
+
+                                            lastX = _ELITEAPIPL.Player.X;
+                                            lastY = _ELITEAPIPL.Player.Y;
+                                            lastZ = _ELITEAPIPL.Player.Z;
+
+                                            // 50 Hz delta feed, so the follower tracks the target almost 1:1.
+                                            Thread.Sleep(TimeSpan.FromSeconds(0.02));
 
                                             // STUCK CHECKER
                                             float genX = lastX - _ELITEAPIPL.Player.X;
@@ -9281,7 +9283,7 @@
                                             if (distance < .1)
                                             {
                                                 stuckCount = stuckCount + 1;
-                                                if (Form2.config.autoFollow_Warning == true && stuckWarning != true && FollowerTargetEntity.Name == _ELITEAPIMonitored.Player.Name && stuckCount == 10)
+                                                if (Form2.config.autoFollow_Warning == true && stuckWarning != true && FollowerTargetEntity.Name == _ELITEAPIMonitored.Player.Name && stuckCount == 100)
                                                 {
                                                     string createdTell = "/tell " + _ELITEAPIMonitored.Player.Name + " " + "I appear to be stuck.";
                                                     _ELITEAPIPL.ThirdParty.SendString(createdTell);
@@ -9307,7 +9309,8 @@
                 }
             }
 
-            Thread.Sleep(TimeSpan.FromSeconds(1));
+            // Re-engage at the same 50 Hz, so following restarts the moment the target moves.
+            Thread.Sleep(TimeSpan.FromSeconds(0.02));
 
         }
 

@@ -1766,6 +1766,11 @@
                 get; set;
             }
 
+            public bool followStopToCast
+            {
+                get; set;
+            }
+
             public bool autoFollow_Warning
             {
                 get; set;
@@ -2315,7 +2320,8 @@
                 config.MinimiseonStart = false;
 
                 config.autoFollowName = "";
-                config.autoFollowDistance = 5;
+                config.autoFollowDistance = new decimal(0.5);
+                config.followStopToCast = true;
                 config.autoFollow_Warning = false;
                 config.FFXIDefaultAutoFollow = false;
                 config.enableHotKeys = false;
@@ -2825,6 +2831,7 @@
 
             config.autoFollowName = autoFollowName.Text;
             config.autoFollowDistance = autoFollowDistance.Value;
+            config.followStopToCast = followStopToCast.Checked;
             config.autoFollow_Warning = autoFollow_Warning.Checked;
             config.FFXIDefaultAutoFollow = FFXIDefaultAutoFollow.Checked;
             config.enableHotKeys = enableHotKeys.Checked;
@@ -3904,7 +3911,13 @@
             MinimiseonStart.Checked = config.MinimiseonStart;
 
             autoFollowName.Text = config.autoFollowName;
+            // An older profile can hold a distance outside the control's range, which throws.
+            if (config.autoFollowDistance < autoFollowDistance.Minimum)
+                config.autoFollowDistance = autoFollowDistance.Minimum;
+            else if (config.autoFollowDistance > autoFollowDistance.Maximum)
+                config.autoFollowDistance = autoFollowDistance.Maximum;
             autoFollowDistance.Value = config.autoFollowDistance;
+            followStopToCast.Checked = config.followStopToCast;
             autoFollow_Warning.Checked = config.autoFollow_Warning;
             FFXIDefaultAutoFollow.Checked = config.FFXIDefaultAutoFollow;
             enableHotKeys.Checked = config.enableHotKeys;

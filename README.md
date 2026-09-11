@@ -38,3 +38,15 @@ Two features do not work yet and say so rather than failing quietly: the **Chat 
 stays empty, because nothing has located the client's chat buffer, and **AcceptRaise** never
 fires, because it needs a menu field that has not been found. Everything else, including
 curing, party reads, recasts, buffs, auto-follow and targeting, runs on real reads.
+
+Follow, rebuilt
+---------------
+
+* **It keeps up now.** The follower fed the client a movement delta ten times a second and
+  re-checked once a second, so it fell behind and then sprinted to catch up. Both run at
+  50 Hz, and it tracks the target almost step for step.
+* **Distance goes down to 0.1**, in tenths, and is compared as a real number instead of a
+  truncated integer, so small gaps mean what they say.
+* **Stop to cast**, a new checkbox in PL Follow Options and on by default: following holds
+  while a spell is casting, so a step never interrupts a cure. Turn it off to follow
+  through casts.
