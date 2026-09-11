@@ -1,8 +1,8 @@
-_addon.name = 'CurePlease_addon'
-_addon.author = 'Daniel_H'
-_addon.version = '1.3 Ashita'
-_addon_description = 'Allows for PARTY DEBUFF Checking and Casting Data'
-_addon.commands = {'cpaddon'}
+addon.name = 'CurePlease_addon'
+addon.author = 'Daniel_H'
+addon.version = '1.4 Ashita'
+addon_description = 'Allows for PARTY DEBUFF Checking and Casting Data'
+addon.commands = {'cpaddon'}
 
 local socket = require("socket")
 
@@ -33,7 +33,7 @@ function Run_Buff_Function(id, data)
     intIndex = 1
     -- GRAB THE MEMBERS NAME
     if userIndex ~= nil then
-      CharacterName = AshitaCore:GetDataManager():GetEntity():GetName(userIndex)
+      CharacterName = AshitaCore:GetMemoryManager():GetEntity():GetName(userIndex)
     end
     if CharacterName ~= nil then
       for i = 1, 32 do
@@ -69,27 +69,38 @@ function SendConfirmation()
   CP_connect:close()
 end
 
-ashita.register_event('incoming_packet', function(id, size, data)
+function mysplit(inputstr, sep)
+  if sep == nil then
+    sep = "%s"
+  end
+  local t = {}
+  for str in string.gmatch(inputstr, "([^"..sep.."]+)") do
+    table.insert(t, str)
+  end
+  return t
+end
+
+ashita.events.register('packet_in', 'cureplease_packet_in', function(e)
 
   casting = nil
 
-  if id == 0xB then
+  if e.id == 0xB then
     zoning_bool = true
-  elseif id == 0xA and zoning_bool then
+  elseif e.id == 0xA and zoning_bool then
     zoning_bool = false
   end
   if not zoning_bool then
 
-    if id == 0x28 then
-      local actor = struct.unpack('I', data, 6);
-      local category = ashita.bits.unpack_be(data, 82, 4);
-      if actor == AshitaCore:GetDataManager():GetParty():GetMemberServerId(0) then
+    if e.id == 0x28 then
+      local actor = ashita.bits.unpack_be(e.data_modified:totable(), 40, 32)
+      local category = ashita.bits.unpack_be(e.data_modified:totable(), 82, 4)
+      if actor == AshitaCore:GetMemoryManager():GetParty():GetMemberServerId(0) then
         if category == 4 then
           casting = 'CUREPLEASE_casting_finished'
         elseif category == 8 then
-          if ashita.bits.unpack_be(data, 86, 16) == 28787 then
+          if ashita.bits.unpack_be(e.data_raw, 10, 6, 16) == 28787 then
             casting = 'CUREPLEASE_casting_interrupted'
-          elseif ashita.bits.unpack_be(data, 86, 16) == 24931 then
+          elseif ashita.bits.unpack_be(e.data_raw, 10, 6, 16) == 24931 then
             casting = 'CUREPLEASE_casting_blocked'
           end
         end
@@ -102,16 +113,16 @@ ashita.register_event('incoming_packet', function(id, size, data)
         end
 
       end
-    elseif id == 0x076 then
-      Run_Buff_Function(id, data)
+    elseif e.id == 0x076 then
+      Run_Buff_Function(e.id, e.data)
     end
   end
   return false;
 end);
 
-ashita.register_event('command', function(command, ntype)
+ashita.events.register('command', 'cureplease_command', function(command)
   -- Get the arguments of the command..
-  local args = command:args();
+  local args = mysplit(command.command);
   if (args[1]:lower() ~= '/cpaddon') then
     return false;
   end
