@@ -5105,11 +5105,8 @@
         /// Whether the PL can cast on a party member: alive, and not obviously out of reach.
         /// </summary>
         /// <remarks>
-        /// The distance no longer has to be greater than zero. An entity the client has not
-        /// rendered reports 0 with real coordinates, and a party member standing beside the PL
-        /// read 0 on 2026-09-11, which made this false forever and stopped every buff on
-        /// anyone but the PL itself. Zero means "not answered", so it is not evidence of being
-        /// out of range, and the game refuses an out-of-range cast on its own.
+        /// A distance of zero means the client has not answered for that entity, not that it is
+        /// out of reach, and the game refuses an out-of-range cast on its own.
         /// </remarks>
         private bool castingPossible(byte partyMemberId)
         {
@@ -8504,10 +8501,8 @@
         /// Whether the game cannot be read right now: a client not attached, or one mid-zone.
         /// </summary>
         /// <remarks>
-        /// XIScry refuses a read while a client rebuilds its world, where EliteAPI returned
-        /// rubbish instead, so a handler that touches the game without asking this first
-        /// crashes on every zone. The handlers that already guard do it inline; these three
-        /// had nothing, because nothing used to be needed.
+        /// XIScry refuses a read mid-zone where EliteAPI returned rubbish, so a handler that
+        /// reads the game without this guard crashes on every zone.
         /// </remarks>
         private bool GameNotReadable()
         {
@@ -8907,13 +8902,8 @@
         /// Was the injected console: the monitored client's /cureplease command, polled here.
         /// </summary>
         /// <remarks>
-        /// EliteAPI read that console from inside the game process. XIScry reads the client
-        /// from outside, where no such console exists, so this cannot be ported and is empty
-        /// rather than broken. The same three commands arrive over UDP from the addon as
-        /// CUREPLEASE_command_start|stop|toggle, handled in AddonReader_DoWork, and the hotkeys
-        /// now send /cpaddon cmd so they reach it.
-        ///
-        /// The handler stays wired so the designer keeps building.
+        /// Nothing outside the game process can read that console. The same commands arrive over
+        /// UDP from the addon instead, handled in AddonReader_DoWork. Left wired for the designer.
         /// </remarks>
         private void CheckCustomActions_TickAsync(object sender, EventArgs e)
         {
@@ -9370,9 +9360,7 @@
 
         private void AddonReader_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
         {
-            // Not gated on pauseActions: the socket has to be bound while paused, or the
-            // unpause command can never arrive over it. Nothing in the receive path touches
-            // the game, so listening while paused is safe.
+            // Listens while paused too, or the unpause command could never arrive over it.
             if (Form2.config.EnableAddOn == true && _ELITEAPIMonitored != null && _ELITEAPIPL != null)
             {
 

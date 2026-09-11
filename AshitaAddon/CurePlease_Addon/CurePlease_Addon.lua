@@ -126,8 +126,7 @@ ashita.register_event('command', function(command, ntype)
   elseif args[2] == "verify" then
     SendConfirmation()
   elseif (#args >= 3 and args[2] == "cmd") then
-    -- args[3], not args[1]: args[1] is the literal '/cpaddon', so this path has never
-    -- sent a command Ashita side. Windower's copy of the addon has always been correct.
+    -- args[3] is the argument; args[1] is the literal '/cpaddon'.
     local CP_connect = assert(socket.udp())
     CP_connect:settimeout(1)
     assert(CP_connect:sendto("CUREPLEASE_command_"..args[3]:lower(), ip, port))
