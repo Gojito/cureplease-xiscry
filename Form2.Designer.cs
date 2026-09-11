@@ -135,6 +135,7 @@
             this.panel9 = new System.Windows.Forms.Panel();
             this.label56 = new System.Windows.Forms.Label();
             this.autoFollow_Warning = new System.Windows.Forms.CheckBox();
+            this.followStopToCast = new System.Windows.Forms.CheckBox();
             this.checkBox4 = new System.Windows.Forms.CheckBox();
             this.autoFollowName = new System.Windows.Forms.TextBox();
             this.autoFollowDistance = new System.Windows.Forms.NumericUpDown();
@@ -1824,6 +1825,7 @@
             this.groupBox14.BorderColor = System.Drawing.Color.SlateGray;
             this.groupBox14.Controls.Add(this.FFXIDefaultAutoFollow);
             this.groupBox14.Controls.Add(this.panel9);
+            this.groupBox14.Controls.Add(this.followStopToCast);
             this.groupBox14.Controls.Add(this.autoFollow_Warning);
             this.groupBox14.Controls.Add(this.checkBox4);
             this.groupBox14.Controls.Add(this.autoFollowName);
@@ -1865,6 +1867,17 @@
             this.autoFollow_Warning.Text = "/tell when not in targeting range or believed stuck";
             this.autoFollow_Warning.UseVisualStyleBackColor = true;
             // 
+            // followStopToCast
+            // 
+            this.followStopToCast.AutoSize = true;
+            this.followStopToCast.Location = new System.Drawing.Point(6, 164);
+            this.followStopToCast.Name = "followStopToCast";
+            this.followStopToCast.Size = new System.Drawing.Size(291, 19);
+            this.followStopToCast.TabIndex = 20;
+            this.followStopToCast.Text = "Stop to cast (pause follow while casting)";
+            this.toolTip1.SetToolTip(this.followStopToCast, "Pauses following while a spell is casting so movement does not interrupt it.");
+            this.followStopToCast.UseVisualStyleBackColor = true;
+            // 
             // checkBox4
             // 
             this.checkBox4.AutoSize = true;
@@ -1885,6 +1898,12 @@
             // 
             // autoFollowDistance
             // 
+            this.autoFollowDistance.DecimalPlaces = 1;
+            this.autoFollowDistance.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
             this.autoFollowDistance.Location = new System.Drawing.Point(204, 57);
             this.autoFollowDistance.Maximum = new decimal(new int[] {
             20,
@@ -1892,18 +1911,18 @@
             0,
             0});
             this.autoFollowDistance.Minimum = new decimal(new int[] {
-            3,
+            1,
             0,
             0,
-            0});
+            65536});
             this.autoFollowDistance.Name = "autoFollowDistance";
             this.autoFollowDistance.Size = new System.Drawing.Size(83, 21);
             this.autoFollowDistance.TabIndex = 2;
             this.autoFollowDistance.Value = new decimal(new int[] {
-            3,
+            5,
             0,
             0,
-            0});
+            65536});
             // 
             // label33
             // 
@@ -8266,6 +8285,7 @@
         private System.Windows.Forms.Panel panel9;
         private System.Windows.Forms.Label label56;
         private System.Windows.Forms.CheckBox autoFollow_Warning;
+        private System.Windows.Forms.CheckBox followStopToCast;
         private System.Windows.Forms.CheckBox checkBox4;
         private System.Windows.Forms.TextBox autoFollowName;
         private System.Windows.Forms.NumericUpDown autoFollowDistance;
