@@ -75,12 +75,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!--
-      XIScry replaces the abandoned EliteMMO.API / EliteAPI pair. It keeps their namespace
-      and type names, so every call site in this project is unchanged, and it reads the client
-      from outside the process: no injection, no native 32-bit DLL, no SeDebugPrivilege at
-      load. The DLL is committed beside this file, where EliteMMO.API.dll used to be.
-    -->
+    <!-- XIScry replaces the abandoned EliteMMO.API / EliteAPI pair, under the same namespace. -->
     <Reference Include="XIScry">
       <HintPath>.\XIScry.dll</HintPath>
     </Reference>
