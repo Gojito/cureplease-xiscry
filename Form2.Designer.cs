@@ -1736,7 +1736,8 @@
             this.label67.Size = new System.Drawing.Size(237, 45);
             this.label67.TabIndex = 7;
             this.label67.Text = "CTRL + ALT + F1           Toggle Pause/Start\r\nCTRL + ALT + F2            Start Cu" +
-    "rePlease \r\nCTRL + ALT + F3            Pause CurePlease";
+    "rePlease \r\nCTRL + ALT + F3            Pause CurePlease\r\nHeld by CurePlease itself, so th" +
+    "ey work from any window.";
             // 
             // enableHotKeys
             // 
