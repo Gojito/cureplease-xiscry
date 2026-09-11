@@ -24,9 +24,8 @@ What that means for you:
 Three things changed in CurePlease itself, all forced by the above:
 
 1. **The injected console is gone.** EliteAPI read `/cureplease` from inside the game process
-   and nothing outside it can. The same three commands already travel over UDP from the
-   companion addon, so the hotkeys now send `/cpaddon cmd toggle|start|pause` and reach the
-   handler that way.
+   and nothing outside it can. The same three commands still travel over UDP from the companion
+   addon, so `/cpaddon cmd toggle|start|pause` typed in game reaches the handler that way.
 2. **The addon's `cmd` branch sent the wrong argument.** It sent `args[1]`, which is the
    literal `/cpaddon`, instead of `args[3]`. Windower's copy was always correct, so this path
    has never worked on Ashita. Fixed, and the addon must be updated alongside the exe.
@@ -50,3 +49,15 @@ Follow, rebuilt
 * **Stop to cast**, a new checkbox in PL Follow Options and on by default: following holds
   while a spell is casting, so a step never interrupts a cure. Turn it off to follow
   through casts.
+
+Hot keys, rewired
+-----------------
+
+CTRL+ALT+F1, F2 and F3 (toggle, start, pause) used to be `/bind` commands sent to the PL's
+client, which meant they only fired while that window had focus, they were sent once per run
+so turning the option on later did nothing, and they were skipped entirely when the program
+was set to pause on start. CurePlease now registers them with Windows itself, so they work
+from whichever window you are in and follow the option the moment you change it.
+
+The Ashita addon in this repository is for **Ashita v4**. The copy shipped through 2.1.0 was
+written for Ashita v3 and will not load on v4.

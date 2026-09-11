@@ -2866,6 +2866,11 @@
                 }
             }
 
+            if (Form1.Current != null)
+            {
+                Form1.Current.SyncGlobalHotKeys();
+            }
+
             Close ( );
             //MessageBox.Show("Saved!", "All Settings");
         }

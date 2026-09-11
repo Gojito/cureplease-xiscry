@@ -272,6 +272,11 @@
 
         public int LUA_Plugin_Loaded = 0;
 
+        public static Form1 Current;
+
+        private GlobalHotKey.HotKeyManager globalHotKeys;
+        private bool globalHotKeysOn;
+
         public int firstTime_Pause = 0;
 
 
@@ -1536,6 +1541,8 @@
             StartPosition = FormStartPosition.CenterScreen;
 
             InitializeComponent();
+
+            Current = this;
 
 
 
@@ -3107,12 +3114,6 @@
                     _ELITEAPIPL.ThirdParty.SendString("//cpaddon settings " + Form2.config.ipAddress + " " + Form2.config.listeningPort);
                     Thread.Sleep(100);
                     _ELITEAPIPL.ThirdParty.SendString("//cpaddon verify");
-                    if (Form2.config.enableHotKeys)
-                    {
-                        _ELITEAPIPL.ThirdParty.SendString("//bind ^!F1 cpaddon cmd toggle");
-                        _ELITEAPIPL.ThirdParty.SendString("//bind ^!F2 cpaddon cmd start");
-                        _ELITEAPIPL.ThirdParty.SendString("//bind ^!F3 cpaddon cmd pause");
-                    }
                 }
                 else if (WindowerMode == "Ashita")
                 {
@@ -3122,12 +3123,6 @@
                     Thread.Sleep(100);
 
                     _ELITEAPIPL.ThirdParty.SendString("/cpaddon verify");
-                    if (Form2.config.enableHotKeys)
-                    {
-                        _ELITEAPIPL.ThirdParty.SendString("/bind ^!F1 /cpaddon cmd toggle");
-                        _ELITEAPIPL.ThirdParty.SendString("/bind ^!F2 /cpaddon cmd start");
-                        _ELITEAPIPL.ThirdParty.SendString("/bind ^!F3 /cpaddon cmd pause");
-                    }
                 }
 
                 AddOnStatus_Click(sender, e);
@@ -3185,12 +3180,6 @@
                     Thread.Sleep(100);
                     _ELITEAPIPL.ThirdParty.SendString("//cpaddon verify");
 
-                    if (Form2.config.enableHotKeys)
-                    {
-                        _ELITEAPIPL.ThirdParty.SendString("//bind ^!F1 cpaddon cmd toggle");
-                        _ELITEAPIPL.ThirdParty.SendString("//bind ^!F2 cpaddon cmd start");
-                        _ELITEAPIPL.ThirdParty.SendString("//bind ^!F3 cpaddon cmd pause");
-                    }
                 }
                 else if (WindowerMode == "Ashita")
                 {
@@ -3199,12 +3188,6 @@
                     _ELITEAPIPL.ThirdParty.SendString("/cpaddon settings " + Form2.config.ipAddress + " " + Form2.config.listeningPort);
                     Thread.Sleep(100);
                     _ELITEAPIPL.ThirdParty.SendString("/cpaddon verify");
-                    if (Form2.config.enableHotKeys)
-                    {
-                        _ELITEAPIPL.ThirdParty.SendString("/bind ^!F1 /cpaddon cmd toggle");
-                        _ELITEAPIPL.ThirdParty.SendString("/bind ^!F2 /cpaddon cmd start");
-                        _ELITEAPIPL.ThirdParty.SendString("/bind ^!F3 /cpaddon cmd pause");
-                    }
                 }
 
                 currentAction.Text = "LUA Addon loaded. ( " + Form2.config.ipAddress + " - " + Form2.config.listeningPort + " )";
@@ -8007,12 +7990,6 @@
                         Thread.Sleep(1500);
                         _ELITEAPIPL.ThirdParty.SendString("//cpaddon settings " + Form2.config.ipAddress + " " + Form2.config.listeningPort);
                         Thread.Sleep(100);
-                        if (Form2.config.enableHotKeys)
-                        {
-                            _ELITEAPIPL.ThirdParty.SendString("//bind ^!F1 cpaddon cmd toggle");
-                            _ELITEAPIPL.ThirdParty.SendString("//bind ^!F2 cpaddon cmd start");
-                            _ELITEAPIPL.ThirdParty.SendString("//bind ^!F3 cpaddon cmd pause");
-                        }
                     }
                     else if (WindowerMode == "Ashita")
                     {
@@ -8020,12 +7997,6 @@
                         Thread.Sleep(1500);
                         _ELITEAPIPL.ThirdParty.SendString("/cpaddon settings " + Form2.config.ipAddress + " " + Form2.config.listeningPort);
                         Thread.Sleep(100);
-                        if (Form2.config.enableHotKeys)
-                        {
-                            _ELITEAPIPL.ThirdParty.SendString("/bind ^!F1 /cpaddon cmd toggle");
-                            _ELITEAPIPL.ThirdParty.SendString("/bind ^!F2 /cpaddon cmd start");
-                            _ELITEAPIPL.ThirdParty.SendString("/bind ^!F3 /cpaddon cmd pause");
-                        }
                     }
 
                     AddOnStatus_Click(sender, e);
@@ -8363,8 +8334,87 @@
         }
 
 
+        /// <summary>
+        /// Registers CTRL+ALT+F1/F2/F3 with Windows while the option is on, releases them when off.
+        /// </summary>
+        /// <remarks>
+        /// These used to be /bind commands sent to the PL's client, which only fired while that
+        /// window had focus. Held by the program, they reach it from whichever window you are in.
+        /// </remarks>
+        public void SyncGlobalHotKeys()
+        {
+            if (Form2.config.enableHotKeys == globalHotKeysOn)
+            {
+                return;
+            }
+
+            if (Form2.config.enableHotKeys)
+            {
+                try
+                {
+                    if (globalHotKeys == null)
+                    {
+                        globalHotKeys = new GlobalHotKey.HotKeyManager();
+                        globalHotKeys.KeyPressed += GlobalHotKeys_KeyPressed;
+                    }
+
+                    System.Windows.Input.ModifierKeys ctrlAlt = System.Windows.Input.ModifierKeys.Control | System.Windows.Input.ModifierKeys.Alt;
+                    globalHotKeys.Register(System.Windows.Input.Key.F1, ctrlAlt);
+                    globalHotKeys.Register(System.Windows.Input.Key.F2, ctrlAlt);
+                    globalHotKeys.Register(System.Windows.Input.Key.F3, ctrlAlt);
+                }
+                catch
+                {
+                    ReleaseGlobalHotKeys();
+                    MessageBox.Show("Another program already owns CTRL+ALT+F1, F2 or F3.", "Hot keys unavailable");
+                    return;
+                }
+            }
+            else
+            {
+                ReleaseGlobalHotKeys();
+            }
+
+            globalHotKeysOn = Form2.config.enableHotKeys;
+        }
+
+        private void ReleaseGlobalHotKeys()
+        {
+            if (globalHotKeys != null)
+            {
+                globalHotKeys.Dispose();
+                globalHotKeys = null;
+            }
+
+            globalHotKeysOn = false;
+        }
+
+        private void GlobalHotKeys_KeyPressed(object sender, GlobalHotKey.KeyPressedEventArgs e)
+        {
+            if (InvokeRequired)
+            {
+                Invoke((MethodInvoker)(() => GlobalHotKeys_KeyPressed(sender, e)));
+                return;
+            }
+
+            if (e.HotKey.Key == System.Windows.Input.Key.F1)
+            {
+                pauseButton.PerformClick();
+            }
+            else if (e.HotKey.Key == System.Windows.Input.Key.F2 && pauseActions)
+            {
+                pauseButton.PerformClick();
+            }
+            else if (e.HotKey.Key == System.Windows.Input.Key.F3 && !pauseActions)
+            {
+                pauseButton.PerformClick();
+            }
+        }
+
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
+            ReleaseGlobalHotKeys();
+
             notifyIcon1.Dispose();
 
             if (_ELITEAPIPL != null)
@@ -8372,23 +8422,11 @@
                 if (WindowerMode == "Ashita")
                 {
                     _ELITEAPIPL.ThirdParty.SendString("/addon unload CurePlease_addon");
-                    if (Form2.config.enableHotKeys)
-                    {
-                        _ELITEAPIPL.ThirdParty.SendString("/unbind ^!F1");
-                        _ELITEAPIPL.ThirdParty.SendString("/unbind ^!F2");
-                        _ELITEAPIPL.ThirdParty.SendString("/unbind ^!F3");
-                    }
                 }
                 else if (WindowerMode == "Windower")
                 {
                     _ELITEAPIPL.ThirdParty.SendString("//lua unload CurePlease_addon");
 
-                    if (Form2.config.enableHotKeys)
-                    {
-                        _ELITEAPIPL.ThirdParty.SendString("//unbind ^!F1");
-                        _ELITEAPIPL.ThirdParty.SendString("//unbind ^!F2");
-                        _ELITEAPIPL.ThirdParty.SendString("//unbind ^!F3");
-                    }
 
                 }
             }
