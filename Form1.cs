@@ -6004,280 +6004,78 @@
                         }
                         else if ((Form2.config.plReraise) && (Form2.config.EnlightenmentReraise) && (!plStatusCheck(StatusEffect.Reraise)) && _ELITEAPIPL.Player.MainJob == 20 && !BuffChecker(401, 0) && HasAbility("Enlightenment"))
                         {
-
-
-                            if (!plStatusCheck(StatusEffect.Enlightenment) && (GetAbilityRecast("Enlightenment") == 0))
-                            {
-                                JobAbility_Wait("Reraise, Enlightenment", "Enlightenment");
-                            }
-
-
-                            if ((Form2.config.plReraise_Level == 1) && _ELITEAPIPL.Player.HasSpell(_ELITEAPIPL.Resources.GetSpell("Reraise", 0).Index) && _ELITEAPIPL.Player.MP > 150)
-                            {
-                                CastSpell("<me>", "Reraise");
-                            }
-                            else if ((Form2.config.plReraise_Level == 2) && _ELITEAPIPL.Player.HasSpell(_ELITEAPIPL.Resources.GetSpell("Reraise II", 0).Index) && _ELITEAPIPL.Player.MP > 150)
-                            {
-                                CastSpell("<me>", "Reraise II");
-                            }
-                            else if ((Form2.config.plReraise_Level == 3) && _ELITEAPIPL.Player.HasSpell(_ELITEAPIPL.Resources.GetSpell("Reraise III", 0).Index) && _ELITEAPIPL.Player.MP > 150)
-                            {
-                                CastSpell("<me>", "Reraise III");
-                            }
-                            else if ((Form2.config.plReraise_Level == 4) && _ELITEAPIPL.Player.HasSpell(_ELITEAPIPL.Resources.GetSpell("Reraise III", 0).Index) && _ELITEAPIPL.Player.MP > 150)
-                            {
-                                CastSpell("<me>", "Reraise III");
-                            }
-
+                            CastPlReraiseEnlightenment();
                         }
                         else if ((Form2.config.plReraise) && (!plStatusCheck(StatusEffect.Reraise)) && CheckReraiseLevelPossession() == true)
                         {
-                            if ((Form2.config.plReraise_Level == 1) && _ELITEAPIPL.Player.MP > 150)
-                            {
-                                CastSpell("<me>", "Reraise");
-                            }
-                            else if ((Form2.config.plReraise_Level == 2) && _ELITEAPIPL.Player.MP > 150)
-                            {
-                                CastSpell("<me>", "Reraise II");
-                            }
-                            else if ((Form2.config.plReraise_Level == 3) && _ELITEAPIPL.Player.MP > 150)
-                            {
-                                CastSpell("<me>", "Reraise III");
-                            }
-                            else if ((Form2.config.plReraise_Level == 4) && _ELITEAPIPL.Player.MP > 150)
-                            {
-                                CastSpell("<me>", "Reraise IV");
-                            }
+                            CastPlReraise();
                         }
                         else if ((Form2.config.plUtsusemi) && (BuffChecker(444, 0) != true && BuffChecker(445, 0) != true && BuffChecker(446, 0) != true))
                         {
-                            if (CheckSpellRecast("Utsusemi: Ni") == 0 && HasSpell("Utsusemi: Ni") && JobChecker("Utsusemi: Ni") == true && GetInventoryItemCount(_ELITEAPIPL, GetItemId("Shihei")) > 0)
-                            {
-                                CastSpell("<me>", "Utsusemi: Ni");
-                            }
-                            else if (CheckSpellRecast("Utsusemi: Ichi") == 0 && HasSpell("Utsusemi: Ichi") && JobChecker("Utsusemi: Ichi") == true && (BuffChecker(62, 0) != true && BuffChecker(444, 0) != true && BuffChecker(445, 0) != true && BuffChecker(446, 0) != true) && GetInventoryItemCount(_ELITEAPIPL, GetItemId("Shihei")) > 0)
-                            {
-                                CastSpell("<me>", "Utsusemi: Ichi");
-                            }
+                            CastPlUtsusemi();
                         }
                         else if ((Form2.config.plProtect) && (!plStatusCheck(StatusEffect.Protect)))
                         {
-                            string protectSpell = string.Empty;
-                            if (Form2.config.autoProtect_Spell == 0)
+                            if (CastPlProtect())
                             {
-                                protectSpell = "Protect";
-                            }
-                            else if (Form2.config.autoProtect_Spell == 1)
-                            {
-                                protectSpell = "Protect II";
-                            }
-                            else if (Form2.config.autoProtect_Spell == 2)
-                            {
-                                protectSpell = "Protect III";
-                            }
-                            else if (Form2.config.autoProtect_Spell == 3)
-                            {
-                                protectSpell = "Protect IV";
-                            }
-                            else if (Form2.config.autoProtect_Spell == 4)
-                            {
-                                protectSpell = "Protect V";
-                            }
-
-                            if (protectSpell != string.Empty && CheckSpellRecast(protectSpell) == 0 && HasSpell(protectSpell) && JobChecker(protectSpell) == true)
-                            {
-                                if ((Form2.config.Accession && Form2.config.accessionProShell && _ELITEAPIPL.Party.GetPartyMembers().Count() > 2) && ((_ELITEAPIPL.Player.MainJob == 5 && _ELITEAPIPL.Player.SubJob == 20) || _ELITEAPIPL.Player.MainJob == 20) && currentSCHCharges >= 1 && (HasAbility("Accession")))
-                                {
-                                    if (!plStatusCheck(StatusEffect.Accession))
-                                    {
-                                        JobAbility_Wait("Protect, Accession", "Accession");
-                                        return;
-                                    }
-                                }
-
-                                CastSpell("<me>", protectSpell);
+                                return;
                             }
                         }
                         else if ((Form2.config.plShell) && (!plStatusCheck(StatusEffect.Shell)))
                         {
-                            string shellSpell = string.Empty;
-                            if (Form2.config.autoShell_Spell == 0)
+                            if (CastPlShell())
                             {
-                                shellSpell = "Shell";
-                            }
-                            else if (Form2.config.autoShell_Spell == 1)
-                            {
-                                shellSpell = "Shell II";
-                            }
-                            else if (Form2.config.autoShell_Spell == 2)
-                            {
-                                shellSpell = "Shell III";
-                            }
-                            else if (Form2.config.autoShell_Spell == 3)
-                            {
-                                shellSpell = "Shell IV";
-                            }
-                            else if (Form2.config.autoShell_Spell == 4)
-                            {
-                                shellSpell = "Shell V";
-                            }
-
-                            if (shellSpell != string.Empty && CheckSpellRecast(shellSpell) == 0 && HasSpell(shellSpell) && JobChecker(shellSpell) == true)
-                            {
-                                if ((Form2.config.Accession && Form2.config.accessionProShell && _ELITEAPIPL.Party.GetPartyMembers().Count() > 2) && ((_ELITEAPIPL.Player.MainJob == 5 && _ELITEAPIPL.Player.SubJob == 20) || _ELITEAPIPL.Player.MainJob == 20) && currentSCHCharges >= 1 && (HasAbility("Accession")))
-                                {
-                                    if (!plStatusCheck(StatusEffect.Accession))
-                                    {
-                                        JobAbility_Wait("Shell, Accession", "Accession");
-                                        return;
-                                    }
-                                }
-
-                                CastSpell("<me>", shellSpell);
+                                return;
                             }
                         }
                         else if ((Form2.config.plBlink) && (!plStatusCheck(StatusEffect.Blink)) && (CheckSpellRecast("Blink") == 0) && (HasSpell("Blink")))
                         {
-
-                            if (Form2.config.Accession && Form2.config.blinkAccession && currentSCHCharges > 0 && HasAbility("Accession") && !plStatusCheck(StatusEffect.Accession))
+                            if (CastPlBlink())
                             {
-                                JobAbility_Wait("Blink, Accession", "Accession");
                                 return;
                             }
-
-                            if (Form2.config.Perpetuance && Form2.config.blinkPerpetuance && currentSCHCharges > 0 && HasAbility("Perpetuance") && !plStatusCheck(StatusEffect.Perpetuance))
-                            {
-                                JobAbility_Wait("Blink, Perpetuance", "Perpetuance");
-                                return;
-                            }
-
-                            CastSpell("<me>", "Blink");
                         }
                         else if ((Form2.config.plPhalanx) && (!plStatusCheck(StatusEffect.Phalanx)) && (CheckSpellRecast("Phalanx") == 0) && (HasSpell("Phalanx")) && JobChecker("Phalanx") == true)
                         {
-                            if (Form2.config.Accession && Form2.config.phalanxAccession && currentSCHCharges > 0 && HasAbility("Accession") && !plStatusCheck(StatusEffect.Accession))
+                            if (CastPlPhalanx())
                             {
-                                JobAbility_Wait("Phalanx, Accession", "Accession");
                                 return;
                             }
-
-                            if (Form2.config.Perpetuance && Form2.config.phalanxPerpetuance && currentSCHCharges > 0 && HasAbility("Perpetuance") && !plStatusCheck(StatusEffect.Perpetuance))
-                            {
-                                JobAbility_Wait("Phalanx, Perpetuance", "Perpetuance");
-                                return;
-                            }
-
-                            CastSpell("<me>", "Phalanx");
                         }
                         else if ((Form2.config.plRefresh) && (!plStatusCheck(StatusEffect.Refresh)) && CheckRefreshLevelPossession())
                         {
-                            if ((Form2.config.plRefresh_Level == 1) && (CheckSpellRecast("Refresh") == 0) && (HasSpell("Refresh")) && JobChecker("Refresh") == true)
+                            if (CastPlRefresh())
                             {
-                                if (Form2.config.Accession && Form2.config.refreshAccession && currentSCHCharges > 0 && HasAbility("Accession") && !plStatusCheck(StatusEffect.Accession))
-                                {
-                                    JobAbility_Wait("Refresh, Accession", "Accession");
-                                    return;
-                                }
-
-                                if (Form2.config.Perpetuance && Form2.config.refreshPerpetuance && currentSCHCharges > 0 && HasAbility("Perpetuance") && !plStatusCheck(StatusEffect.Perpetuance))
-                                {
-                                    JobAbility_Wait("Refresh, Perpetuance", "Perpetuance");
-                                    return;
-                                }
-
-                                CastSpell("<me>", "Refresh");
-                            }
-                            else if ((Form2.config.plRefresh_Level == 2) && (CheckSpellRecast("Refresh II") == 0) && (HasSpell("Refresh II")) && JobChecker("Refresh II") == true)
-                            {
-                                CastSpell("<me>", "Refresh II");
-                            }
-                            else if ((Form2.config.plRefresh_Level == 3) && (CheckSpellRecast("Refresh III") == 0) && (HasSpell("Refresh III")) && JobChecker("Refresh III") == true)
-                            {
-                                CastSpell("<me>", "Refresh III");
+                                return;
                             }
                         }
                         else if ((Form2.config.plRegen) && (!plStatusCheck(StatusEffect.Regen)) && CheckRegenLevelPossession() == true)
                         {
-                            if (Form2.config.Accession && Form2.config.regenAccession && currentSCHCharges > 0 && HasAbility("Accession") && !plStatusCheck(StatusEffect.Accession))
+                            if (CastPlRegen())
                             {
-                                JobAbility_Wait("Regen, Accession", "Accession");
                                 return;
-                            }
-
-                            if (Form2.config.Perpetuance && Form2.config.regenPerpetuance && currentSCHCharges > 0 && HasAbility("Perpetuance") && !plStatusCheck(StatusEffect.Perpetuance))
-                            {
-                                JobAbility_Wait("Regen, Perpetuance", "Perpetuance");
-                                return;
-                            }
-
-                            if ((Form2.config.plRegen_Level == 1) && _ELITEAPIPL.Player.MP > 15)
-                            {
-                                CastSpell("<me>", "Regen");
-                            }
-                            else if ((Form2.config.plRegen_Level == 2) && _ELITEAPIPL.Player.MP > 36)
-                            {
-                                CastSpell("<me>", "Regen II");
-                            }
-                            else if ((Form2.config.plRegen_Level == 3) && _ELITEAPIPL.Player.MP > 64)
-                            {
-                                CastSpell("<me>", "Regen III");
-                            }
-                            else if ((Form2.config.plRegen_Level == 4) && _ELITEAPIPL.Player.MP > 82)
-                            {
-                                CastSpell("<me>", "Regen IV");
-                            }
-                            else if ((Form2.config.plRegen_Level == 5) && _ELITEAPIPL.Player.MP > 100)
-                            {
-                                CastSpell("<me>", "Regen V");
                             }
                         }
                         else if ((Form2.config.plAdloquium) && (!plStatusCheck(StatusEffect.Regain)) && (CheckSpellRecast("Adloquium") == 0) && (HasSpell("Adloquium")) && JobChecker("Adloquium") == true)
                         {
-                            if (Form2.config.Accession && Form2.config.adloquiumAccession && currentSCHCharges > 0 && HasAbility("Accession") && !plStatusCheck(StatusEffect.Accession))
+                            if (CastPlAdloquium())
                             {
-                                JobAbility_Wait("Adloquium, Accession", "Accession");
                                 return;
                             }
-
-                            if (Form2.config.Perpetuance && Form2.config.adloquiumPerpetuance && currentSCHCharges > 0 && HasAbility("Perpetuance") && !plStatusCheck(StatusEffect.Perpetuance))
-                            {
-                                JobAbility_Wait("Adloquium, Perpetuance", "Perpetuance");
-                                return;
-                            }
-
-                            CastSpell("<me>", "Adloquium");
                         }
                         else if ((Form2.config.plStoneskin) && (!plStatusCheck(StatusEffect.Stoneskin)) && (CheckSpellRecast("Stoneskin") == 0) && (HasSpell("Stoneskin")) && JobChecker("Stoneskin") == true)
                         {
-                            if (Form2.config.Accession && Form2.config.stoneskinAccession && currentSCHCharges > 0 && HasAbility("Accession") && !plStatusCheck(StatusEffect.Accession))
+                            if (CastPlStoneskin())
                             {
-                                JobAbility_Wait("Stoneskin, Accession", "Accession");
                                 return;
                             }
-
-                            if (Form2.config.Perpetuance && Form2.config.stoneskinPerpetuance && currentSCHCharges > 0 && HasAbility("Perpetuance") && !plStatusCheck(StatusEffect.Perpetuance))
-                            {
-                                JobAbility_Wait("Stoneskin, Perpetuance", "Perpetuance");
-                                return;
-                            }
-
-                            CastSpell("<me>", "Stoneskin");
                         }
                         else if ((Form2.config.plAquaveil) && (!plStatusCheck(StatusEffect.Aquaveil)) && (CheckSpellRecast("Aquaveil") == 0) && (HasSpell("Aquaveil")) && JobChecker("Aquaveil") == true)
                         {
-                            if (Form2.config.Accession && Form2.config.aquaveilAccession && currentSCHCharges > 0 && HasAbility("Accession") && !plStatusCheck(StatusEffect.Accession))
+                            if (CastPlAquaveil())
                             {
-                                JobAbility_Wait("Aquaveil, Accession", "Accession");
                                 return;
                             }
-
-                            if (Form2.config.Perpetuance && Form2.config.aquaveilPerpetuance && currentSCHCharges > 0 && HasAbility("Perpetuance") && plStatusCheck(StatusEffect.Perpetuance))
-                            {
-                                JobAbility_Wait("Aquaveil, Perpetuance", "Perpetuance");
-                                return;
-                            }
-
-                            CastSpell("<me>", "Aquaveil");
                         }
                         else if ((Form2.config.plShellra) && (!plStatusCheck(StatusEffect.Shell)) && CheckShellraLevelPossession() == true)
                         {
@@ -6289,35 +6087,17 @@
                         }
                         else if ((Form2.config.plBarElement) && (!BuffChecker(BarspellBuffID, 0) && (CheckSpellRecast(BarspellName) == 0) && (HasSpell(BarspellName)) && JobChecker(BarspellName) == true))
                         {
-                            if (Form2.config.Accession && Form2.config.barspellAccession && currentSCHCharges > 0 && HasAbility("Accession") && BarSpell_AOE == false && !plStatusCheck(StatusEffect.Accession))
+                            if (CastPlBarElement(BarspellName, BarspellBuffID, BarSpell_AOE))
                             {
-                                JobAbility_Wait("Barspell, Accession", "Accession");
                                 return;
                             }
-
-                            if (Form2.config.Perpetuance && Form2.config.barspellPerpetuance && currentSCHCharges > 0 && HasAbility("Perpetuance") && !plStatusCheck(StatusEffect.Perpetuance))
-                            {
-                                JobAbility_Wait("Barspell, Perpetuance", "Perpetuance");
-                                return;
-                            }
-
-                            CastSpell("<me>", BarspellName);
                         }
                         else if ((Form2.config.plBarStatus) && (!BuffChecker(BarstatusBuffID, 0) && (CheckSpellRecast(BarstatusName) == 0) && (HasSpell(BarstatusName)) && JobChecker(BarstatusName) == true))
                         {
-                            if (Form2.config.Accession && Form2.config.barstatusAccession && currentSCHCharges > 0 && HasAbility("Accession") && BarStatus_AOE == false && !plStatusCheck(StatusEffect.Accession))
+                            if (CastPlBarStatus(BarstatusName, BarstatusBuffID, BarStatus_AOE))
                             {
-                                JobAbility_Wait("Barstatus, Accession", "Accession");
                                 return;
                             }
-
-                            if (Form2.config.Perpetuance && Form2.config.barstatusPerpetuance && currentSCHCharges > 0 && HasAbility("Perpetuance") && !plStatusCheck(StatusEffect.Perpetuance))
-                            {
-                                JobAbility_Wait("Barstatus, Perpetuance", "Perpetuance");
-                                return;
-                            }
-
-                            CastSpell("<me>", BarstatusName);
                         }
                         else if (Form2.config.plGainBoost && (Form2.config.plGainBoost_Spell == 0) && !plStatusCheck(StatusEffect.STR_Boost2) && (CheckSpellRecast("Gain-STR") == 0) && (HasSpell("Gain-STR")))
                         {
@@ -6377,79 +6157,33 @@
                         }
                         else if ((Form2.config.plStormSpell) && (!BuffChecker(stormspell.buffID, 0) && (CheckSpellRecast(stormspell.Spell_Name) == 0) && (HasSpell(stormspell.Spell_Name)) && JobChecker(stormspell.Spell_Name) == true))
                         {
-                            if (Form2.config.Accession && Form2.config.stormspellAccession && currentSCHCharges > 0 && HasAbility("Accession") && !plStatusCheck(StatusEffect.Accession))
+                            if (CastPlStormSpell(stormspell))
                             {
-                                JobAbility_Wait("Stormspell, Accession", "Accession");
                                 return;
                             }
-
-                            if (Form2.config.Perpetuance && Form2.config.stormspellPerpetuance && currentSCHCharges > 0 && HasAbility("Perpetuance") && !plStatusCheck(StatusEffect.Perpetuance))
-                            {
-                                JobAbility_Wait("Stormspell, Perpetuance", "Perpetuance");
-                                return;
-                            }
-
-                            CastSpell("<me>", stormspell.Spell_Name);
                         }
                         else if ((Form2.config.plKlimaform) && !plStatusCheck(StatusEffect.Klimaform))
                         {
-                            if ((CheckSpellRecast("Klimaform") == 0) && (HasSpell("Klimaform")))
-                            {
-                                CastSpell("<me>", "Klimaform");
-                            }
+                            CastPlKlimaform();
                         }
                         else if ((Form2.config.plTemper) && (!plStatusCheck(StatusEffect.Multi_Strikes)))
                         {
-                            if ((Form2.config.plTemper_Level == 1) && (CheckSpellRecast("Temper") == 0) && (HasSpell("Temper")))
-                            {
-                                CastSpell("<me>", "Temper");
-                            }
-                            else if ((Form2.config.plTemper_Level == 2) && (CheckSpellRecast("Temper II") == 0) && (HasSpell("Temper II")))
-                            {
-                                CastSpell("<me>", "Temper II");
-                            }
+                            CastPlTemper();
                         }
                         else if ((Form2.config.plHaste) && (!plStatusCheck(StatusEffect.Haste)))
                         {
-                            if ((Form2.config.plHaste_Level == 1) && (CheckSpellRecast("Haste") == 0) && (HasSpell("Haste")))
-                            {
-                                CastSpell("<me>", "Haste");
-                            }
-                            else if ((Form2.config.plHaste_Level == 2) && (CheckSpellRecast("Haste II") == 0) && (HasSpell("Haste II")))
-                            {
-                                CastSpell("<me>", "Haste II");
-                            }
+                            CastPlHaste();
                         }
                         else if ((Form2.config.plSpikes) && ActiveSpikes() == false)
                         {
-                            if ((Form2.config.plSpikes_Spell == 0) && (CheckSpellRecast("Blaze Spikes") == 0) && (HasSpell("Blaze Spikes")))
-                            {
-                                CastSpell("<me>", "Blaze Spikes");
-                            }
-                            else if ((Form2.config.plSpikes_Spell == 1) && (CheckSpellRecast("Ice Spikes") == 0) && (HasSpell("Ice Spikes")))
-                            {
-                                CastSpell("<me>", "Ice Spikes");
-                            }
-                            else if ((Form2.config.plSpikes_Spell == 2) && (CheckSpellRecast("Shock Spikes") == 0) && (HasSpell("Shock Spikes")))
-                            {
-                                CastSpell("<me>", "Shock Spikes");
-                            }
+                            CastPlSpikes();
                         }
                         else if ((Form2.config.plEnspell) && (!BuffChecker(enspell.buffID, 0) && (CheckSpellRecast(enspell.Spell_Name) == 0) && (HasSpell(enspell.Spell_Name)) && JobChecker(enspell.Spell_Name) == true))
                         {
-                            if (Form2.config.Accession && Form2.config.enspellAccession && currentSCHCharges > 0 && HasAbility("Accession") && enspell.spell_position < 6 && !plStatusCheck(StatusEffect.Accession))
+                            if (CastPlEnspell(enspell))
                             {
-                                JobAbility_Wait("Enspell, Accession", "Accession");
                                 return;
                             }
-
-                            if (Form2.config.Perpetuance && Form2.config.enspellPerpetuance && currentSCHCharges > 0 && HasAbility("Perpetuance") && enspell.spell_position < 6 && !plStatusCheck(StatusEffect.Perpetuance))
-                            {
-                                JobAbility_Wait("Enspell, Perpetuance", "Perpetuance");
-                                return;
-                            }
-
-                            CastSpell("<me>", enspell.Spell_Name);
                         }
                         else if ((Form2.config.plAuspice) && (!plStatusCheck(StatusEffect.Auspice)) && (CheckSpellRecast("Auspice") == 0) && (HasSpell("Auspice")))
                         {
@@ -6579,35 +6313,7 @@
 
                         else if ((Form2.config.autoTarget == true) && (CheckSpellRecast(Form2.config.autoTargetSpell) == 0) && (HasSpell(Form2.config.autoTargetSpell)))
                         {
-                            if (Form2.config.Hate_SpellType == 1) // PARTY BASED HATE SPELL
-                            {
-                                int enemyID = CheckEngagedStatus_Hate();
-
-                                if (enemyID != 0 && enemyID != lastKnownEstablisherTarget)
-                                {
-                                    CastSpell(Form2.config.autoTarget_Target, Form2.config.autoTargetSpell);
-                                    lastKnownEstablisherTarget = enemyID;
-                                }
-                            }
-                            else // ENEMY BASED TARGET
-                            {
-                                int enemyID = CheckEngagedStatus_Hate();
-
-                                if (enemyID != 0 && enemyID != lastKnownEstablisherTarget)
-                                {
-                                    _ELITEAPIPL.Target.SetTarget(enemyID);
-                                    await Task.Delay(TimeSpan.FromMilliseconds(500));
-                                    CastSpell("<t>", Form2.config.autoTargetSpell);
-                                    lastKnownEstablisherTarget = enemyID;
-                                    await Task.Delay(TimeSpan.FromMilliseconds(1000));
-
-                                    if (Form2.config.DisableTargettingCancel == false)
-                                    {
-                                        await Task.Delay(TimeSpan.FromSeconds((double)Form2.config.TargetRemoval_Delay));
-                                        _ELITEAPIPL.Target.SetTarget(0);
-                                    }
-                                }
-                            }
+                            await CastAutoTargetSpell();
                         }
 
                         // BARD SONGS
@@ -6947,6 +6653,471 @@
                 }
             }
         }
+
+        private void CastPlReraiseEnlightenment()
+        {
+
+
+            if (!plStatusCheck(StatusEffect.Enlightenment) && (GetAbilityRecast("Enlightenment") == 0))
+            {
+                JobAbility_Wait("Reraise, Enlightenment", "Enlightenment");
+            }
+
+
+            if ((Form2.config.plReraise_Level == 1) && _ELITEAPIPL.Player.HasSpell(_ELITEAPIPL.Resources.GetSpell("Reraise", 0).Index) && _ELITEAPIPL.Player.MP > 150)
+            {
+                CastSpell("<me>", "Reraise");
+            }
+            else if ((Form2.config.plReraise_Level == 2) && _ELITEAPIPL.Player.HasSpell(_ELITEAPIPL.Resources.GetSpell("Reraise II", 0).Index) && _ELITEAPIPL.Player.MP > 150)
+            {
+                CastSpell("<me>", "Reraise II");
+            }
+            else if ((Form2.config.plReraise_Level == 3) && _ELITEAPIPL.Player.HasSpell(_ELITEAPIPL.Resources.GetSpell("Reraise III", 0).Index) && _ELITEAPIPL.Player.MP > 150)
+            {
+                CastSpell("<me>", "Reraise III");
+            }
+            else if ((Form2.config.plReraise_Level == 4) && _ELITEAPIPL.Player.HasSpell(_ELITEAPIPL.Resources.GetSpell("Reraise III", 0).Index) && _ELITEAPIPL.Player.MP > 150)
+            {
+                CastSpell("<me>", "Reraise III");
+            }
+
+        }
+
+        private void CastPlReraise()
+        {
+            if ((Form2.config.plReraise_Level == 1) && _ELITEAPIPL.Player.MP > 150)
+            {
+                CastSpell("<me>", "Reraise");
+            }
+            else if ((Form2.config.plReraise_Level == 2) && _ELITEAPIPL.Player.MP > 150)
+            {
+                CastSpell("<me>", "Reraise II");
+            }
+            else if ((Form2.config.plReraise_Level == 3) && _ELITEAPIPL.Player.MP > 150)
+            {
+                CastSpell("<me>", "Reraise III");
+            }
+            else if ((Form2.config.plReraise_Level == 4) && _ELITEAPIPL.Player.MP > 150)
+            {
+                CastSpell("<me>", "Reraise IV");
+            }
+        }
+
+        private void CastPlUtsusemi()
+        {
+            if (CheckSpellRecast("Utsusemi: Ni") == 0 && HasSpell("Utsusemi: Ni") && JobChecker("Utsusemi: Ni") == true && GetInventoryItemCount(_ELITEAPIPL, GetItemId("Shihei")) > 0)
+            {
+                CastSpell("<me>", "Utsusemi: Ni");
+            }
+            else if (CheckSpellRecast("Utsusemi: Ichi") == 0 && HasSpell("Utsusemi: Ichi") && JobChecker("Utsusemi: Ichi") == true && (BuffChecker(62, 0) != true && BuffChecker(444, 0) != true && BuffChecker(445, 0) != true && BuffChecker(446, 0) != true) && GetInventoryItemCount(_ELITEAPIPL, GetItemId("Shihei")) > 0)
+            {
+                CastSpell("<me>", "Utsusemi: Ichi");
+            }
+        }
+
+        private bool CastPlProtect()
+        {
+            string protectSpell = string.Empty;
+            if (Form2.config.autoProtect_Spell == 0)
+            {
+                protectSpell = "Protect";
+            }
+            else if (Form2.config.autoProtect_Spell == 1)
+            {
+                protectSpell = "Protect II";
+            }
+            else if (Form2.config.autoProtect_Spell == 2)
+            {
+                protectSpell = "Protect III";
+            }
+            else if (Form2.config.autoProtect_Spell == 3)
+            {
+                protectSpell = "Protect IV";
+            }
+            else if (Form2.config.autoProtect_Spell == 4)
+            {
+                protectSpell = "Protect V";
+            }
+
+            if (protectSpell != string.Empty && CheckSpellRecast(protectSpell) == 0 && HasSpell(protectSpell) && JobChecker(protectSpell) == true)
+            {
+                if ((Form2.config.Accession && Form2.config.accessionProShell && _ELITEAPIPL.Party.GetPartyMembers().Count() > 2) && ((_ELITEAPIPL.Player.MainJob == 5 && _ELITEAPIPL.Player.SubJob == 20) || _ELITEAPIPL.Player.MainJob == 20) && currentSCHCharges >= 1 && (HasAbility("Accession")))
+                {
+                    if (!plStatusCheck(StatusEffect.Accession))
+                    {
+                        JobAbility_Wait("Protect, Accession", "Accession");
+                        return true;
+                    }
+                }
+
+                CastSpell("<me>", protectSpell);
+            }
+
+            return false;
+        }
+
+        private bool CastPlShell()
+        {
+            string shellSpell = string.Empty;
+            if (Form2.config.autoShell_Spell == 0)
+            {
+                shellSpell = "Shell";
+            }
+            else if (Form2.config.autoShell_Spell == 1)
+            {
+                shellSpell = "Shell II";
+            }
+            else if (Form2.config.autoShell_Spell == 2)
+            {
+                shellSpell = "Shell III";
+            }
+            else if (Form2.config.autoShell_Spell == 3)
+            {
+                shellSpell = "Shell IV";
+            }
+            else if (Form2.config.autoShell_Spell == 4)
+            {
+                shellSpell = "Shell V";
+            }
+
+            if (shellSpell != string.Empty && CheckSpellRecast(shellSpell) == 0 && HasSpell(shellSpell) && JobChecker(shellSpell) == true)
+            {
+                if ((Form2.config.Accession && Form2.config.accessionProShell && _ELITEAPIPL.Party.GetPartyMembers().Count() > 2) && ((_ELITEAPIPL.Player.MainJob == 5 && _ELITEAPIPL.Player.SubJob == 20) || _ELITEAPIPL.Player.MainJob == 20) && currentSCHCharges >= 1 && (HasAbility("Accession")))
+                {
+                    if (!plStatusCheck(StatusEffect.Accession))
+                    {
+                        JobAbility_Wait("Shell, Accession", "Accession");
+                        return true;
+                    }
+                }
+
+                CastSpell("<me>", shellSpell);
+            }
+
+            return false;
+        }
+
+        private bool CastPlBlink()
+        {
+
+            if (Form2.config.Accession && Form2.config.blinkAccession && currentSCHCharges > 0 && HasAbility("Accession") && !plStatusCheck(StatusEffect.Accession))
+            {
+                JobAbility_Wait("Blink, Accession", "Accession");
+                return true;
+            }
+
+            if (Form2.config.Perpetuance && Form2.config.blinkPerpetuance && currentSCHCharges > 0 && HasAbility("Perpetuance") && !plStatusCheck(StatusEffect.Perpetuance))
+            {
+                JobAbility_Wait("Blink, Perpetuance", "Perpetuance");
+                return true;
+            }
+
+            CastSpell("<me>", "Blink");
+
+            return false;
+        }
+
+        private bool CastPlPhalanx()
+        {
+            if (Form2.config.Accession && Form2.config.phalanxAccession && currentSCHCharges > 0 && HasAbility("Accession") && !plStatusCheck(StatusEffect.Accession))
+            {
+                JobAbility_Wait("Phalanx, Accession", "Accession");
+                return true;
+            }
+
+            if (Form2.config.Perpetuance && Form2.config.phalanxPerpetuance && currentSCHCharges > 0 && HasAbility("Perpetuance") && !plStatusCheck(StatusEffect.Perpetuance))
+            {
+                JobAbility_Wait("Phalanx, Perpetuance", "Perpetuance");
+                return true;
+            }
+
+            CastSpell("<me>", "Phalanx");
+
+            return false;
+        }
+
+        private bool CastPlRefresh()
+        {
+            if ((Form2.config.plRefresh_Level == 1) && (CheckSpellRecast("Refresh") == 0) && (HasSpell("Refresh")) && JobChecker("Refresh") == true)
+            {
+                if (Form2.config.Accession && Form2.config.refreshAccession && currentSCHCharges > 0 && HasAbility("Accession") && !plStatusCheck(StatusEffect.Accession))
+                {
+                    JobAbility_Wait("Refresh, Accession", "Accession");
+                    return true;
+                }
+
+                if (Form2.config.Perpetuance && Form2.config.refreshPerpetuance && currentSCHCharges > 0 && HasAbility("Perpetuance") && !plStatusCheck(StatusEffect.Perpetuance))
+                {
+                    JobAbility_Wait("Refresh, Perpetuance", "Perpetuance");
+                    return true;
+                }
+
+                CastSpell("<me>", "Refresh");
+            }
+            else if ((Form2.config.plRefresh_Level == 2) && (CheckSpellRecast("Refresh II") == 0) && (HasSpell("Refresh II")) && JobChecker("Refresh II") == true)
+            {
+                CastSpell("<me>", "Refresh II");
+            }
+            else if ((Form2.config.plRefresh_Level == 3) && (CheckSpellRecast("Refresh III") == 0) && (HasSpell("Refresh III")) && JobChecker("Refresh III") == true)
+            {
+                CastSpell("<me>", "Refresh III");
+            }
+
+            return false;
+        }
+
+        private bool CastPlRegen()
+        {
+            if (Form2.config.Accession && Form2.config.regenAccession && currentSCHCharges > 0 && HasAbility("Accession") && !plStatusCheck(StatusEffect.Accession))
+            {
+                JobAbility_Wait("Regen, Accession", "Accession");
+                return true;
+            }
+
+            if (Form2.config.Perpetuance && Form2.config.regenPerpetuance && currentSCHCharges > 0 && HasAbility("Perpetuance") && !plStatusCheck(StatusEffect.Perpetuance))
+            {
+                JobAbility_Wait("Regen, Perpetuance", "Perpetuance");
+                return true;
+            }
+
+            if ((Form2.config.plRegen_Level == 1) && _ELITEAPIPL.Player.MP > 15)
+            {
+                CastSpell("<me>", "Regen");
+            }
+            else if ((Form2.config.plRegen_Level == 2) && _ELITEAPIPL.Player.MP > 36)
+            {
+                CastSpell("<me>", "Regen II");
+            }
+            else if ((Form2.config.plRegen_Level == 3) && _ELITEAPIPL.Player.MP > 64)
+            {
+                CastSpell("<me>", "Regen III");
+            }
+            else if ((Form2.config.plRegen_Level == 4) && _ELITEAPIPL.Player.MP > 82)
+            {
+                CastSpell("<me>", "Regen IV");
+            }
+            else if ((Form2.config.plRegen_Level == 5) && _ELITEAPIPL.Player.MP > 100)
+            {
+                CastSpell("<me>", "Regen V");
+            }
+
+            return false;
+        }
+
+        private bool CastPlAdloquium()
+        {
+            if (Form2.config.Accession && Form2.config.adloquiumAccession && currentSCHCharges > 0 && HasAbility("Accession") && !plStatusCheck(StatusEffect.Accession))
+            {
+                JobAbility_Wait("Adloquium, Accession", "Accession");
+                return true;
+            }
+
+            if (Form2.config.Perpetuance && Form2.config.adloquiumPerpetuance && currentSCHCharges > 0 && HasAbility("Perpetuance") && !plStatusCheck(StatusEffect.Perpetuance))
+            {
+                JobAbility_Wait("Adloquium, Perpetuance", "Perpetuance");
+                return true;
+            }
+
+            CastSpell("<me>", "Adloquium");
+
+            return false;
+        }
+
+        private bool CastPlStoneskin()
+        {
+            if (Form2.config.Accession && Form2.config.stoneskinAccession && currentSCHCharges > 0 && HasAbility("Accession") && !plStatusCheck(StatusEffect.Accession))
+            {
+                JobAbility_Wait("Stoneskin, Accession", "Accession");
+                return true;
+            }
+
+            if (Form2.config.Perpetuance && Form2.config.stoneskinPerpetuance && currentSCHCharges > 0 && HasAbility("Perpetuance") && !plStatusCheck(StatusEffect.Perpetuance))
+            {
+                JobAbility_Wait("Stoneskin, Perpetuance", "Perpetuance");
+                return true;
+            }
+
+            CastSpell("<me>", "Stoneskin");
+
+            return false;
+        }
+
+        private bool CastPlAquaveil()
+        {
+            if (Form2.config.Accession && Form2.config.aquaveilAccession && currentSCHCharges > 0 && HasAbility("Accession") && !plStatusCheck(StatusEffect.Accession))
+            {
+                JobAbility_Wait("Aquaveil, Accession", "Accession");
+                return true;
+            }
+
+            if (Form2.config.Perpetuance && Form2.config.aquaveilPerpetuance && currentSCHCharges > 0 && HasAbility("Perpetuance") && plStatusCheck(StatusEffect.Perpetuance))
+            {
+                JobAbility_Wait("Aquaveil, Perpetuance", "Perpetuance");
+                return true;
+            }
+
+            CastSpell("<me>", "Aquaveil");
+
+            return false;
+        }
+
+        private bool CastPlBarElement(string BarspellName, int BarspellBuffID, bool BarSpell_AOE)
+        {
+            if (Form2.config.Accession && Form2.config.barspellAccession && currentSCHCharges > 0 && HasAbility("Accession") && BarSpell_AOE == false && !plStatusCheck(StatusEffect.Accession))
+            {
+                JobAbility_Wait("Barspell, Accession", "Accession");
+                return true;
+            }
+
+            if (Form2.config.Perpetuance && Form2.config.barspellPerpetuance && currentSCHCharges > 0 && HasAbility("Perpetuance") && !plStatusCheck(StatusEffect.Perpetuance))
+            {
+                JobAbility_Wait("Barspell, Perpetuance", "Perpetuance");
+                return true;
+            }
+
+            CastSpell("<me>", BarspellName);
+
+            return false;
+        }
+
+        private bool CastPlBarStatus(string BarstatusName, int BarstatusBuffID, bool BarStatus_AOE)
+        {
+            if (Form2.config.Accession && Form2.config.barstatusAccession && currentSCHCharges > 0 && HasAbility("Accession") && BarStatus_AOE == false && !plStatusCheck(StatusEffect.Accession))
+            {
+                JobAbility_Wait("Barstatus, Accession", "Accession");
+                return true;
+            }
+
+            if (Form2.config.Perpetuance && Form2.config.barstatusPerpetuance && currentSCHCharges > 0 && HasAbility("Perpetuance") && !plStatusCheck(StatusEffect.Perpetuance))
+            {
+                JobAbility_Wait("Barstatus, Perpetuance", "Perpetuance");
+                return true;
+            }
+
+            CastSpell("<me>", BarstatusName);
+
+            return false;
+        }
+
+        private bool CastPlStormSpell(SpellsData stormspell)
+        {
+            if (Form2.config.Accession && Form2.config.stormspellAccession && currentSCHCharges > 0 && HasAbility("Accession") && !plStatusCheck(StatusEffect.Accession))
+            {
+                JobAbility_Wait("Stormspell, Accession", "Accession");
+                return true;
+            }
+
+            if (Form2.config.Perpetuance && Form2.config.stormspellPerpetuance && currentSCHCharges > 0 && HasAbility("Perpetuance") && !plStatusCheck(StatusEffect.Perpetuance))
+            {
+                JobAbility_Wait("Stormspell, Perpetuance", "Perpetuance");
+                return true;
+            }
+
+            CastSpell("<me>", stormspell.Spell_Name);
+
+            return false;
+        }
+
+        private void CastPlKlimaform()
+        {
+            if ((CheckSpellRecast("Klimaform") == 0) && (HasSpell("Klimaform")))
+            {
+                CastSpell("<me>", "Klimaform");
+            }
+        }
+
+        private void CastPlTemper()
+        {
+            if ((Form2.config.plTemper_Level == 1) && (CheckSpellRecast("Temper") == 0) && (HasSpell("Temper")))
+            {
+                CastSpell("<me>", "Temper");
+            }
+            else if ((Form2.config.plTemper_Level == 2) && (CheckSpellRecast("Temper II") == 0) && (HasSpell("Temper II")))
+            {
+                CastSpell("<me>", "Temper II");
+            }
+        }
+
+        private void CastPlHaste()
+        {
+            if ((Form2.config.plHaste_Level == 1) && (CheckSpellRecast("Haste") == 0) && (HasSpell("Haste")))
+            {
+                CastSpell("<me>", "Haste");
+            }
+            else if ((Form2.config.plHaste_Level == 2) && (CheckSpellRecast("Haste II") == 0) && (HasSpell("Haste II")))
+            {
+                CastSpell("<me>", "Haste II");
+            }
+        }
+
+        private void CastPlSpikes()
+        {
+            if ((Form2.config.plSpikes_Spell == 0) && (CheckSpellRecast("Blaze Spikes") == 0) && (HasSpell("Blaze Spikes")))
+            {
+                CastSpell("<me>", "Blaze Spikes");
+            }
+            else if ((Form2.config.plSpikes_Spell == 1) && (CheckSpellRecast("Ice Spikes") == 0) && (HasSpell("Ice Spikes")))
+            {
+                CastSpell("<me>", "Ice Spikes");
+            }
+            else if ((Form2.config.plSpikes_Spell == 2) && (CheckSpellRecast("Shock Spikes") == 0) && (HasSpell("Shock Spikes")))
+            {
+                CastSpell("<me>", "Shock Spikes");
+            }
+        }
+
+        private bool CastPlEnspell(SpellsData enspell)
+        {
+            if (Form2.config.Accession && Form2.config.enspellAccession && currentSCHCharges > 0 && HasAbility("Accession") && enspell.spell_position < 6 && !plStatusCheck(StatusEffect.Accession))
+            {
+                JobAbility_Wait("Enspell, Accession", "Accession");
+                return true;
+            }
+
+            if (Form2.config.Perpetuance && Form2.config.enspellPerpetuance && currentSCHCharges > 0 && HasAbility("Perpetuance") && enspell.spell_position < 6 && !plStatusCheck(StatusEffect.Perpetuance))
+            {
+                JobAbility_Wait("Enspell, Perpetuance", "Perpetuance");
+                return true;
+            }
+
+            CastSpell("<me>", enspell.Spell_Name);
+
+            return false;
+        }
+
+        private async Task CastAutoTargetSpell()
+        {
+            if (Form2.config.Hate_SpellType == 1) // PARTY BASED HATE SPELL
+            {
+                int enemyID = CheckEngagedStatus_Hate();
+
+                if (enemyID != 0 && enemyID != lastKnownEstablisherTarget)
+                {
+                    CastSpell(Form2.config.autoTarget_Target, Form2.config.autoTargetSpell);
+                    lastKnownEstablisherTarget = enemyID;
+                }
+            }
+            else // ENEMY BASED TARGET
+            {
+                int enemyID = CheckEngagedStatus_Hate();
+
+                if (enemyID != 0 && enemyID != lastKnownEstablisherTarget)
+                {
+                    _ELITEAPIPL.Target.SetTarget(enemyID);
+                    await Task.Delay(TimeSpan.FromMilliseconds(500));
+                    CastSpell("<t>", Form2.config.autoTargetSpell);
+                    lastKnownEstablisherTarget = enemyID;
+                    await Task.Delay(TimeSpan.FromMilliseconds(1000));
+
+                    if (Form2.config.DisableTargettingCancel == false)
+                    {
+                        await Task.Delay(TimeSpan.FromSeconds((double)Form2.config.TargetRemoval_Delay));
+                        _ELITEAPIPL.Target.SetTarget(0);
+                    }
+                }
+            }
+        }
+
 
 
         private bool CheckIfAutoStormspellEnabled(byte id)
