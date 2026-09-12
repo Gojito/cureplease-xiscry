@@ -50,6 +50,14 @@ Follow, rebuilt
   while a spell is casting, so a step never interrupts a cure. Turn it off to follow
   through casts.
 
+Job abilities first
+-------------------
+
+Light Arts, Dark Arts, the two Addendums, Composure and the two Afflatus modes decide how
+hard everything after them lands. They used to be checked after the cure pass, and Afflatus
+only after every self buff had gone out, so the opening cures of a fight were the weak ones.
+They now run before the first cure or buff of each pass.
+
 Hot keys, rewired
 -----------------
 
