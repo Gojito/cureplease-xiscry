@@ -6618,6 +6618,8 @@
             }
         }
 
+        private readonly Dictionary<StatusEffect, int> castingModeTries = new Dictionary<StatusEffect, int>();
+
         private bool UseCastingModes()
         {
             if (plStatusCheck(StatusEffect.Amnesia) || (_ELITEAPIPL.Player.Status != 1 && _ELITEAPIPL.Player.Status != 0))
@@ -6625,39 +6627,57 @@
                 return false;
             }
 
+            foreach (StatusEffect landed in castingModeTries.Keys.Where(plStatusCheck).ToList())
+            {
+                castingModeTries.Remove(landed);
+            }
+
             if ((Form2.config.AfflatusSolace) && (!plStatusCheck(StatusEffect.Afflatus_Solace)) && (GetAbilityRecast("Afflatus Solace") == 0) && (HasAbility("Afflatus Solace")))
             {
-                JobAbility_Wait("Afflatus Solace", "Afflatus Solace");
+                return UseCastingMode("Afflatus Solace", "Afflatus Solace", StatusEffect.Afflatus_Solace);
             }
             else if ((Form2.config.AfflatusMisery) && (!plStatusCheck(StatusEffect.Afflatus_Misery)) && (GetAbilityRecast("Afflatus Misery") == 0) && (HasAbility("Afflatus Misery")))
             {
-                JobAbility_Wait("Afflatus Misery", "Afflatus Misery");
+                return UseCastingMode("Afflatus Misery", "Afflatus Misery", StatusEffect.Afflatus_Misery);
             }
             else if ((Form2.config.Composure) && (!plStatusCheck(StatusEffect.Composure)) && (GetAbilityRecast("Composure") == 0) && (HasAbility("Composure")))
             {
-                JobAbility_Wait("Composure", "Composure");
+                return UseCastingMode("Composure", "Composure", StatusEffect.Composure);
             }
             else if ((Form2.config.LightArts) && (!plStatusCheck(StatusEffect.Light_Arts)) && (!plStatusCheck(StatusEffect.Addendum_White)) && (GetAbilityRecast("Light Arts") == 0) && (HasAbility("Light Arts")))
             {
-                JobAbility_Wait("Light Arts", "Light Arts");
+                return UseCastingMode("Light Arts", "Light Arts", StatusEffect.Light_Arts);
             }
             else if ((Form2.config.AddendumWhite) && (!plStatusCheck(StatusEffect.Addendum_White)) && (plStatusCheck(StatusEffect.Light_Arts)) && (GetAbilityRecast("Stratagems") == 0) && (HasAbility("Stratagems")))
             {
-                JobAbility_Wait("Addendum: White", "Addendum: White");
+                return UseCastingMode("Addendum: White", "Addendum: White", StatusEffect.Addendum_White);
             }
             else if ((Form2.config.DarkArts) && (!plStatusCheck(StatusEffect.Dark_Arts)) && (!plStatusCheck(StatusEffect.Addendum_Black)) && (GetAbilityRecast("Dark Arts") == 0) && (HasAbility("Dark Arts")))
             {
-                JobAbility_Wait("Dark Arts", "Dark Arts");
+                return UseCastingMode("Dark Arts", "Dark Arts", StatusEffect.Dark_Arts);
             }
             else if ((Form2.config.AddendumBlack) && (plStatusCheck(StatusEffect.Dark_Arts)) && (!plStatusCheck(StatusEffect.Addendum_Black)) && (GetAbilityRecast("Stratagems") == 0) && (HasAbility("Stratagems")))
             {
-                JobAbility_Wait("Addendum: Black", "Addendum: Black");
+                return UseCastingMode("Addendum: Black", "Addendum: Black", StatusEffect.Addendum_Black);
             }
-            else
+
+            return false;
+        }
+
+        // An ability that reads ready but never lands would hold the pass forever and the party
+        // would go unhealed. Three attempts, then it is left alone until it lands.
+        private bool UseCastingMode(string label, string ability, StatusEffect buff)
+        {
+            int tries;
+            castingModeTries.TryGetValue(buff, out tries);
+
+            if (tries >= 3)
             {
                 return false;
             }
 
+            castingModeTries[buff] = tries + 1;
+            JobAbility_Wait(label, ability);
             return true;
         }
 
