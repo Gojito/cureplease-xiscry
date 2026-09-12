@@ -285,6 +285,7 @@
         // does when the ability is ready. So the clock is kept here, from when CurePlease last
         // sent the ability. A zero entry means the ability has not been used and is ready.
         private readonly Dictionary<int, DateTime> abilityFiredAt = new Dictionary<int, DateTime>();
+        private byte lastMainJob;
 
         public int GetAbilityRecast(string checked_abilityName)
         {
@@ -316,7 +317,7 @@
                 return 0;
             }
 
-            int elapsed = (int)(DateTime.Now - firedAt).TotalSeconds;
+            int elapsed = (int)(DateTime.UtcNow - firedAt).TotalSeconds;
 
             return elapsed >= length ? 0 : length - elapsed;
         }
@@ -327,12 +328,12 @@
         {
             XiClient.IAbility data = _ELITEAPIPL.Resources.GetAbility(ability, 0);
 
+            _ELITEAPIPL.ThirdParty.SendString("/ja \"" + ability + "\" " + target);
+
             if (data != null)
             {
-                abilityFiredAt[data.TimerID] = DateTime.Now;
+                abilityFiredAt[data.TimerID] = DateTime.UtcNow;
             }
-
-            _ELITEAPIPL.ThirdParty.SendString("/ja \"" + ability + "\" " + target);
         }
 
         public int CheckSpellRecast(string checked_recastspellName)
@@ -5390,6 +5391,14 @@
             }
 
 
+            if (_ELITEAPIPL.Player.MainJob != lastMainJob)
+            {
+                lastMainJob = _ELITEAPIPL.Player.MainJob;
+                abilityFiredAt.Clear();
+                castingModeTries.Clear();
+                castingModeLastTry.Clear();
+            }
+
             GrabPlayerMonitoredData();
 
             // Grab current time for calculations below
@@ -6659,7 +6668,10 @@
             }
         }
 
+        private const int CastingModeTries = 3;
+        private static readonly TimeSpan CastingModeRest = TimeSpan.FromMinutes(5);
         private readonly Dictionary<StatusEffect, int> castingModeTries = new Dictionary<StatusEffect, int>();
+        private readonly Dictionary<StatusEffect, DateTime> castingModeLastTry = new Dictionary<StatusEffect, DateTime>();
 
         private bool UseCastingModes()
         {
@@ -6671,6 +6683,7 @@
             foreach (StatusEffect landed in castingModeTries.Keys.Where(plStatusCheck).ToList())
             {
                 castingModeTries.Remove(landed);
+                castingModeLastTry.Remove(landed);
             }
 
             if ((Form2.config.AfflatusSolace) && (!plStatusCheck(StatusEffect.Afflatus_Solace)) && (GetAbilityRecast("Afflatus Solace") == 0) && (HasAbility("Afflatus Solace")))
@@ -6689,7 +6702,7 @@
             {
                 return UseCastingMode("Light Arts", "Light Arts", StatusEffect.Light_Arts);
             }
-            else if ((Form2.config.AddendumWhite) && (!plStatusCheck(StatusEffect.Addendum_White)) && (plStatusCheck(StatusEffect.Light_Arts)) && (GetAbilityRecast("Stratagems") == 0) && (HasAbility("Stratagems")))
+            else if ((Form2.config.AddendumWhite) && (!plStatusCheck(StatusEffect.Addendum_White)) && (plStatusCheck(StatusEffect.Light_Arts)) && (currentSCHCharges >= 1) && (HasAbility("Stratagems")))
             {
                 return UseCastingMode("Addendum: White", "Addendum: White", StatusEffect.Addendum_White);
             }
@@ -6697,7 +6710,7 @@
             {
                 return UseCastingMode("Dark Arts", "Dark Arts", StatusEffect.Dark_Arts);
             }
-            else if ((Form2.config.AddendumBlack) && (plStatusCheck(StatusEffect.Dark_Arts)) && (!plStatusCheck(StatusEffect.Addendum_Black)) && (GetAbilityRecast("Stratagems") == 0) && (HasAbility("Stratagems")))
+            else if ((Form2.config.AddendumBlack) && (plStatusCheck(StatusEffect.Dark_Arts)) && (!plStatusCheck(StatusEffect.Addendum_Black)) && (currentSCHCharges >= 1) && (HasAbility("Stratagems")))
             {
                 return UseCastingMode("Addendum: Black", "Addendum: Black", StatusEffect.Addendum_Black);
             }
@@ -6710,14 +6723,22 @@
         private bool UseCastingMode(string label, string ability, StatusEffect buff)
         {
             int tries;
+            DateTime lastTry;
             castingModeTries.TryGetValue(buff, out tries);
 
-            if (tries >= 3)
+            if (tries >= CastingModeTries)
             {
-                return false;
+                if (castingModeLastTry.TryGetValue(buff, out lastTry)
+                    && DateTime.UtcNow - lastTry < CastingModeRest)
+                {
+                    return false;
+                }
+
+                tries = 0;
             }
 
             castingModeTries[buff] = tries + 1;
+            castingModeLastTry[buff] = DateTime.UtcNow;
             JobAbility_Wait(label, ability);
             return true;
         }
