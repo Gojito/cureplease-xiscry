@@ -1,6 +1,6 @@
 ﻿namespace CurePlease
 {
-    using EliteMMO.API;
+    using XIScry.Api;
     using System;
     using System.Windows.Forms;
     using static Form1;
@@ -21,10 +21,10 @@
             {
                 #region "== First generate all current chat entries."
 
-                _ELITEAPIPL = new EliteAPI((int)f1.activeprocessids.SelectedItem);
+                _ELITEAPIPL = new XiClient((int)f1.activeprocessids.SelectedItem);
                 characterNamed_label.Text = "Chatlog for character: " + _ELITEAPIPL.Player.Name + "\n";
 
-                EliteAPI.ChatEntry cl = new EliteAPI.ChatEntry();
+                XiClient.ChatEntry cl = new XiClient.ChatEntry();
 
                 while ((cl = _ELITEAPIPL.Chat.GetNextChatLine()) != null)
                 {
@@ -54,7 +54,7 @@
         {
             #region "== Now add any additional chat entries every set period of time"
 
-            EliteAPI.ChatEntry cl = new EliteAPI.ChatEntry();
+            XiClient.ChatEntry cl = new XiClient.ChatEntry();
 
             while ((cl = _ELITEAPIPL.Chat.GetNextChatLine()) != null)
             {

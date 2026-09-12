@@ -1,7 +1,7 @@
 ﻿namespace CurePlease
 {
     using CurePlease.Properties;
-    using EliteMMO.API;
+    using XIScry.Api;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
@@ -158,12 +158,12 @@
         public List<SpellsData> stormspells = new List<SpellsData>();
 
 
-        private int GetInventoryItemCount(EliteAPI api, ushort itemid)
+        private int GetInventoryItemCount(XiClient api, ushort itemid)
         {
             int count = 0;
             for (int x = 0; x <= 80; x++)
             {
-                EliteAPI.InventoryItem item = api.Inventory.GetContainerItem(0, x);
+                XiClient.InventoryItem item = api.Inventory.GetContainerItem(0, x);
                 if (item != null && item.Id == itemid)
                 {
                     count += (int)item.Count;
@@ -173,12 +173,12 @@
             return count;
         }
 
-        private int GetTempItemCount(EliteAPI api, ushort itemid)
+        private int GetTempItemCount(XiClient api, ushort itemid)
         {
             int count = 0;
             for (int x = 0; x <= 80; x++)
             {
-                EliteAPI.InventoryItem item = api.Inventory.GetContainerItem(3, x);
+                XiClient.InventoryItem item = api.Inventory.GetContainerItem(3, x);
                 if (item != null && item.Id == itemid)
                 {
                     count += (int)item.Count;
@@ -190,7 +190,7 @@
 
         private ushort GetItemId(string name)
         {
-            EliteAPI.IItem item = _ELITEAPIPL.Resources.GetItem(name, 0);
+            XiClient.IItem item = _ELITEAPIPL.Resources.GetItem(name, 0);
             return item != null ? (ushort)item.ItemID : (ushort)0;
         }
 
@@ -208,9 +208,9 @@
             return -1;
         }
 
-        public static EliteAPI _ELITEAPIPL;
+        public static XiClient _ELITEAPIPL;
 
-        public EliteAPI _ELITEAPIMonitored;
+        public XiClient _ELITEAPIMonitored;
 
         public ListBox processids = new ListBox();
 
@@ -305,7 +305,7 @@
 
             if (checked_recastspellName != "blank")
             {
-                EliteAPI.ISpell magic = _ELITEAPIPL.Resources.GetSpell(checked_recastspellName, 0);
+                XiClient.ISpell magic = _ELITEAPIPL.Resources.GetSpell(checked_recastspellName, 0);
 
                 if (magic == null)
                 {
@@ -356,7 +356,7 @@
                 return true;
             }
 
-            EliteAPI.ISpell magic = _ELITEAPIPL.Resources.GetSpell(checked_spellName, 0);
+            XiClient.ISpell magic = _ELITEAPIPL.Resources.GetSpell(checked_spellName, 0);
 
             if (_ELITEAPIPL.Player.GetPlayerInfo().Buffs.Any(b => b == 262)) // IF YOU HAVE OMERTA THEN BLOCK MAGIC CASTING
             {
@@ -377,7 +377,7 @@
 
             string checked_spellName = SpellName.Trim().ToLower();
 
-            EliteAPI.ISpell magic = _ELITEAPIPL.Resources.GetSpell(checked_spellName, 0); // GRAB THE REQUESTED SPELL DATA
+            XiClient.ISpell magic = _ELITEAPIPL.Resources.GetSpell(checked_spellName, 0); // GRAB THE REQUESTED SPELL DATA
 
             int mainjobLevelRequired = magic.LevelRequired[(_ELITEAPIPL.Player.MainJob)]; // GRAB SPELL LEVEL FOR THE MAIN JOB
             int subjobLevelRequired = magic.LevelRequired[(_ELITEAPIPL.Player.SubJob)]; // GRAB SPELL LEVEL FOR THE SUB JOB
@@ -397,7 +397,7 @@
             }
             else if (mainjobLevelRequired > 99 && mainjobLevelRequired != -1)
             { // IF THE MAIN JOB LEVEL IS GREATER THAN 99 BUT DOES NOT EQUAL -1 THEN IT IS A JOB POINT REQUIRED SPELL AND SO FURTHER CHECKS MUST BE MADE SO GRAB CURRENT JOB POINT TABLE
-                EliteAPI.PlayerJobPoints JobPoints = _ELITEAPIPL.Player.GetJobPoints(_ELITEAPIPL.Player.MainJob);
+                XiClient.PlayerJobPoints JobPoints = _ELITEAPIPL.Player.GetJobPoints(_ELITEAPIPL.Player.MainJob);
 
                 // Spell is a JP spell so check this works correctly and that you possess the spell
                 if (checked_spellName == "refresh iii" || checked_spellName == "temper ii")
@@ -3021,7 +3021,7 @@
 
             processids.SelectedIndex = POLID.SelectedIndex;
             activeprocessids.SelectedIndex = POLID.SelectedIndex;
-            _ELITEAPIPL = new EliteAPI((int)processids.SelectedItem);
+            _ELITEAPIPL = new XiClient((int)processids.SelectedItem);
             plLabel.Text = "Selected PL: " + _ELITEAPIPL.Player.Name;
             Text = notifyIcon1.Text = _ELITEAPIPL.Player.Name + " - " + "Cure Please v" + Application.ProductVersion;
 
@@ -3144,7 +3144,7 @@
                 return;
             }
             processids.SelectedIndex = POLID2.SelectedIndex;
-            _ELITEAPIMonitored = new EliteAPI((int)processids.SelectedItem);
+            _ELITEAPIMonitored = new XiClient((int)processids.SelectedItem);
             monitoredLabel.Text = "Monitoring: " + _ELITEAPIMonitored.Player.Name;
             monitoredLabel.ForeColor = Color.Green;
             POLID2.BackColor = Color.White;
@@ -4448,7 +4448,7 @@
             {
                 int BreakOut = 0;
 
-                List<EliteAPI.PartyMember> partyMembers = _ELITEAPIPL.Party.GetPartyMembers();
+                List<XiClient.PartyMember> partyMembers = _ELITEAPIPL.Party.GetPartyMembers();
 
                 List<BuffStorage> generated_base_list = ActiveBuffs.ToList();
 
@@ -4457,7 +4457,7 @@
 
                     foreach (BuffStorage ailment in generated_base_list)
                     {
-                        foreach (EliteAPI.PartyMember ptMember in partyMembers)
+                        foreach (XiClient.PartyMember ptMember in partyMembers)
                         {
                             if (ailment != null && ptMember != null)
                             {
@@ -5093,7 +5093,7 @@
         /// </remarks>
         private bool castingPossible(byte partyMemberId)
         {
-            EliteAPI.PartyMember member = _ELITEAPIMonitored.Party.GetPartyMembers()[partyMemberId];
+            XiClient.PartyMember member = _ELITEAPIMonitored.Party.GetPartyMembers()[partyMemberId];
 
             if (member.CurrentHP == 0)
             {
@@ -5161,7 +5161,7 @@
             if (CastingBackground_Check != true)
             {
 
-                EliteAPI.ISpell magic = _ELITEAPIPL.Resources.GetSpell(spellName.Trim(), 0);
+                XiClient.ISpell magic = _ELITEAPIPL.Resources.GetSpell(spellName.Trim(), 0);
 
                 castingSpell = magic.Name[0];
 
@@ -5298,7 +5298,7 @@
             var PARTYD = _ELITEAPIPL.Party.GetPartyMembers().Where(p => p.Active != 0 && p.Zone == _ELITEAPIPL.Player.ZoneId);
 
             List<string> gen = new List<string>();
-            foreach (EliteAPI.PartyMember pData in PARTYD)
+            foreach (XiClient.PartyMember pData in PARTYD)
             {
                 if (pData != null && pData.Name != "")
                 {
@@ -5320,7 +5320,7 @@
         {
             for (int x = 0; x < 2048; x++)
             {
-                EliteAPI.XiEntity entity = _ELITEAPIPL.Entity.GetEntity(x);
+                XiClient.XiEntity entity = _ELITEAPIPL.Entity.GetEntity(x);
 
                 if (entity.Name != null && entity.Name == _ELITEAPIMonitored.Player.Name)
                 {
@@ -5618,7 +5618,7 @@
                 {
                     await Task.Delay(2000);
                     currentAction.Text = "Accepting Raise or Reraise.";
-                    _ELITEAPIPL.ThirdParty.KeyPress(EliteMMO.API.Keys.NUMPADENTER);
+                    _ELITEAPIPL.ThirdParty.KeyPress(XIScry.Api.Keys.NUMPADENTER);
                     await Task.Delay(5000);
                     currentAction.Text = string.Empty;
                 }
@@ -5693,13 +5693,13 @@
 
                             ushort PetsIndex = _ELITEAPIPL.Player.PetIndex;
 
-                            EliteAPI.XiEntity PetsEntity = _ELITEAPIPL.Entity.GetEntity(PetsIndex);
+                            XiClient.XiEntity PetsEntity = _ELITEAPIPL.Entity.GetEntity(PetsIndex);
 
                             int FullCircle_CharID = 0;
 
                             for (int x = 0; x < 2048; x++)
                             {
-                                EliteAPI.XiEntity entity = _ELITEAPIPL.Entity.GetEntity(x);
+                                XiClient.XiEntity entity = _ELITEAPIPL.Entity.GetEntity(x);
 
                                 if (entity.Name != null && entity.Name.ToLower().Equals(Form2.config.LuopanSpell_Target.ToLower()))
                                 {
@@ -5710,7 +5710,7 @@
 
                             if (FullCircle_CharID != 0)
                             {
-                                EliteAPI.XiEntity FullCircleEntity = _ELITEAPIPL.Entity.GetEntity(FullCircle_CharID);
+                                XiClient.XiEntity FullCircleEntity = _ELITEAPIPL.Entity.GetEntity(FullCircle_CharID);
 
                                 float fX = PetsEntity.X - FullCircleEntity.X;
                                 float fY = PetsEntity.Y - FullCircleEntity.Y;
@@ -5729,7 +5729,7 @@
                         {
                             ushort PetsIndex = _ELITEAPIPL.Player.PetIndex;
 
-                            EliteAPI.XiEntity PetsEntity = _ELITEAPIMonitored.Entity.GetEntity(PetsIndex);
+                            XiClient.XiEntity PetsEntity = _ELITEAPIMonitored.Entity.GetEntity(PetsIndex);
 
                             if (PetsEntity.Distance >= 10)
                             {
@@ -5849,13 +5849,13 @@
 
                     /////////////////////////// CURAGA //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-                    IOrderedEnumerable<EliteAPI.PartyMember> cParty_curaga = _ELITEAPIMonitored.Party.GetPartyMembers().Where(p => p.Active != 0 && p.Zone == _ELITEAPIPL.Player.ZoneId).OrderBy(p => p.CurrentHPP);
+                    IOrderedEnumerable<XiClient.PartyMember> cParty_curaga = _ELITEAPIMonitored.Party.GetPartyMembers().Where(p => p.Active != 0 && p.Zone == _ELITEAPIPL.Player.ZoneId).OrderBy(p => p.CurrentHPP);
 
                     int memberOF_curaga = GeneratePT_structure();
 
                     if (memberOF_curaga != 0 && memberOF_curaga != 4)
                     {
-                        foreach (EliteAPI.PartyMember pData in cParty_curaga)
+                        foreach (XiClient.PartyMember pData in cParty_curaga)
                         {
                             if (memberOF_curaga == 1 && pData.MemberNumber >= 0 && pData.MemberNumber <= 5)
                             {
@@ -6347,13 +6347,13 @@
                                 int memberOF = GeneratePT_structure();
 
                                 // Now generate the party
-                                IEnumerable<EliteAPI.PartyMember> cParty = _ELITEAPIMonitored.Party.GetPartyMembers().Where(p => p.Active != 0 && p.Zone == _ELITEAPIPL.Player.ZoneId);
+                                IEnumerable<XiClient.PartyMember> cParty = _ELITEAPIMonitored.Party.GetPartyMembers().Where(p => p.Active != 0 && p.Zone == _ELITEAPIPL.Player.ZoneId);
 
                                 // Make sure member number is not 0 (null) or 4 (void)
                                 if (memberOF != 0 && memberOF != 4)
                                 {
                                     // Run through Each party member as we're looking for either a specifc name or if set otherwise anyone with the MP criteria in the current party.
-                                    foreach (EliteAPI.PartyMember pData in cParty)
+                                    foreach (XiClient.PartyMember pData in cParty)
                                     {
                                         // If party of party v1
                                         if (memberOF == 1 && pData.MemberNumber >= 0 && pData.MemberNumber <= 5)
@@ -6364,7 +6364,7 @@
                                                 {
                                                     if (pData.Name == Form2.config.DevotionTargetName)
                                                     {
-                                                        EliteAPI.XiEntity playerInfo = _ELITEAPIPL.Entity.GetEntity((int)pData.TargetIndex);
+                                                        XiClient.XiEntity playerInfo = _ELITEAPIPL.Entity.GetEntity((int)pData.TargetIndex);
                                                         if (playerInfo.Distance < 10 && playerInfo.Distance > 0 && pData.CurrentMP <= Form2.config.DevotionMP && pData.CurrentMPP <= 30)
                                                         {
                                                             _ELITEAPIPL.ThirdParty.SendString("/ja \"Devotion\" " + Form2.config.DevotionTargetName);
@@ -6374,7 +6374,7 @@
                                                 }
                                                 else
                                                 {
-                                                    EliteAPI.XiEntity playerInfo = _ELITEAPIPL.Entity.GetEntity((int)pData.TargetIndex);
+                                                    XiClient.XiEntity playerInfo = _ELITEAPIPL.Entity.GetEntity((int)pData.TargetIndex);
 
                                                     if ((pData.CurrentMP <= Form2.config.DevotionMP) && (playerInfo.Distance < 10) && pData.CurrentMPP <= 30)
                                                     {
@@ -6393,7 +6393,7 @@
                                                 {
                                                     if (pData.Name == Form2.config.DevotionTargetName)
                                                     {
-                                                        EliteAPI.XiEntity playerInfo = _ELITEAPIPL.Entity.GetEntity((int)pData.TargetIndex);
+                                                        XiClient.XiEntity playerInfo = _ELITEAPIPL.Entity.GetEntity((int)pData.TargetIndex);
                                                         if (playerInfo.Distance < 10 && playerInfo.Distance > 0 && pData.CurrentMP <= Form2.config.DevotionMP)
                                                         {
                                                             _ELITEAPIPL.ThirdParty.SendString("/ja \"Devotion\" " + Form2.config.DevotionTargetName);
@@ -6403,7 +6403,7 @@
                                                 }
                                                 else
                                                 {
-                                                    EliteAPI.XiEntity playerInfo = _ELITEAPIPL.Entity.GetEntity((int)pData.TargetIndex);
+                                                    XiClient.XiEntity playerInfo = _ELITEAPIPL.Entity.GetEntity((int)pData.TargetIndex);
 
                                                     if ((pData.CurrentMP <= Form2.config.DevotionMP) && (playerInfo.Distance < 10) && pData.CurrentMPP <= 50)
                                                     {
@@ -6422,7 +6422,7 @@
                                                 {
                                                     if (pData.Name == Form2.config.DevotionTargetName)
                                                     {
-                                                        EliteAPI.XiEntity playerInfo = _ELITEAPIPL.Entity.GetEntity((int)pData.TargetIndex);
+                                                        XiClient.XiEntity playerInfo = _ELITEAPIPL.Entity.GetEntity((int)pData.TargetIndex);
                                                         if (playerInfo.Distance < 10 && playerInfo.Distance > 0 && pData.CurrentMP <= Form2.config.DevotionMP)
                                                         {
                                                             _ELITEAPIPL.ThirdParty.SendString("/ja \"Devotion\" " + Form2.config.DevotionTargetName);
@@ -6432,7 +6432,7 @@
                                                 }
                                                 else
                                                 {
-                                                    EliteAPI.XiEntity playerInfo = _ELITEAPIPL.Entity.GetEntity((int)pData.TargetIndex);
+                                                    XiClient.XiEntity playerInfo = _ELITEAPIPL.Entity.GetEntity((int)pData.TargetIndex);
 
                                                     if ((pData.CurrentMP <= Form2.config.DevotionMP) && (playerInfo.Distance < 10) && pData.CurrentMPP <= 50)
                                                     {
@@ -8617,7 +8617,7 @@
             {
                 for (int x = 0; x < 2048; x++)
                 {
-                    EliteAPI.XiEntity entity = _ELITEAPIPL.Entity.GetEntity(x);
+                    XiClient.XiEntity entity = _ELITEAPIPL.Entity.GetEntity(x);
 
                     if (entity.Name != null && entity.Name.ToLower().Equals(Form2.config.autoFollowName.ToLower()))
                     {
@@ -8646,14 +8646,14 @@
             int PT_Structutre_NO = GeneratePT_structure();
 
             // Now generate the party
-            IEnumerable<EliteAPI.PartyMember> cParty = _ELITEAPIMonitored.Party.GetPartyMembers().Where(p => p.Active != 0 && p.Zone == _ELITEAPIPL.Player.ZoneId);
+            IEnumerable<XiClient.PartyMember> cParty = _ELITEAPIMonitored.Party.GetPartyMembers().Where(p => p.Active != 0 && p.Zone == _ELITEAPIPL.Player.ZoneId);
 
             // Make sure member number is not 0 (null) or 4 (void)
             if (PT_Structutre_NO != 0 && PT_Structutre_NO != 4)
             {
                 // Run through Each party member as we're looking for either a specific name or if set
                 // otherwise anyone with the MP criteria in the current party.
-                foreach (EliteAPI.PartyMember pData in cParty)
+                foreach (XiClient.PartyMember pData in cParty)
                 {
                     if (PT_Structutre_NO == 1 && pData.MemberNumber >= 0 && pData.MemberNumber <= 5 && pData.Name == _ELITEAPIMonitored.Player.Name)
                     {
@@ -8676,11 +8676,11 @@
         public int GeneratePT_structure()
         {
             // FIRST CHECK THAT BOTH THE PL AND MONITORED PLAYER ARE IN THE SAME PT/ALLIANCE
-            List<EliteAPI.PartyMember> currentPT = _ELITEAPIMonitored.Party.GetPartyMembers();
+            List<XiClient.PartyMember> currentPT = _ELITEAPIMonitored.Party.GetPartyMembers();
 
             int partyChecker = 0;
 
-            foreach (EliteAPI.PartyMember PTMember in currentPT)
+            foreach (XiClient.PartyMember PTMember in currentPT)
             {
                 if (PTMember.Name == _ELITEAPIPL.Player.Name)
                 {
@@ -8834,7 +8834,7 @@
             {
                 for (int x = 0; x < 2048; x++)
                 {
-                    EliteAPI.XiEntity z = _ELITEAPIPL.Entity.GetEntity(x);
+                    XiClient.XiEntity z = _ELITEAPIPL.Entity.GetEntity(x);
                     if (z.Name != string.Empty && z.Name != null)
                     {
                         if (z.Name.ToLower() == Form2.config.LuopanSpell_Target.ToLower()) // A match was located so use this entity as a check.
@@ -8905,7 +8905,7 @@
                     {
                         for (int x = 0; x < 2048; x++)
                         {
-                            EliteAPI.XiEntity z = _ELITEAPIPL.Entity.GetEntity(x);
+                            XiClient.XiEntity z = _ELITEAPIPL.Entity.GetEntity(x);
                             if (z.Name != string.Empty && z.Name != null)
                             {
                                 if (z.Name.ToLower() == Form2.config.LuopanSpell_Target.ToLower()) // A match was located so use this entity as a check.
@@ -8946,7 +8946,7 @@
 
                 for (int x = 0; x < 2048; x++)
                 {
-                    EliteAPI.XiEntity z = _ELITEAPIPL.Entity.GetEntity(x);
+                    XiClient.XiEntity z = _ELITEAPIPL.Entity.GetEntity(x);
 
                     if (z.Name != null && z.Name.ToLower() == Form2.config.autoTarget_Target.ToLower())
                     {
@@ -8966,8 +8966,8 @@
             {
                 if (_ELITEAPIMonitored.Player.Status == 1)
                 {
-                    EliteAPI.TargetInfo target = _ELITEAPIMonitored.Target.GetTargetInfo();
-                    EliteAPI.XiEntity entity = _ELITEAPIMonitored.Entity.GetEntity(Convert.ToInt32(target.TargetIndex));
+                    XiClient.TargetInfo target = _ELITEAPIMonitored.Target.GetTargetInfo();
+                    XiClient.XiEntity entity = _ELITEAPIMonitored.Entity.GetEntity(Convert.ToInt32(target.TargetIndex));
                     return Convert.ToInt32(entity.TargetID);
 
                 }
@@ -8986,7 +8986,7 @@
 
                 for (int x = 0; x < 2048; x++)
                 {
-                    EliteAPI.XiEntity z = _ELITEAPIPL.Entity.GetEntity(x);
+                    XiClient.XiEntity z = _ELITEAPIPL.Entity.GetEntity(x);
 
                     if (z.Name != null && z.Name.ToLower() == Form2.config.LuopanSpell_Target.ToLower())
                     {
@@ -9006,8 +9006,8 @@
             {
                 if (_ELITEAPIMonitored.Player.Status == 1)
                 {
-                    EliteAPI.TargetInfo target = _ELITEAPIMonitored.Target.GetTargetInfo();
-                    EliteAPI.XiEntity entity = _ELITEAPIMonitored.Entity.GetEntity(Convert.ToInt32(target.TargetIndex));
+                    XiClient.TargetInfo target = _ELITEAPIMonitored.Target.GetTargetInfo();
+                    XiClient.XiEntity entity = _ELITEAPIMonitored.Entity.GetEntity(Convert.ToInt32(target.TargetIndex));
                     return Convert.ToInt32(entity.TargetID);
 
                 }
@@ -9034,7 +9034,7 @@
 
             for (int x = 0; x < 2048; x++)
             {
-                EliteAPI.XiEntity entityGEO = _ELITEAPIPL.Entity.GetEntity(x);
+                XiClient.XiEntity entityGEO = _ELITEAPIPL.Entity.GetEntity(x);
 
                 if (!string.IsNullOrEmpty(checkedName) && !string.IsNullOrEmpty(entityGEO.Name))
                 {
@@ -9161,7 +9161,7 @@
                 int Monitoreddistance = 50;
 
 
-                EliteAPI.XiEntity monitoredTarget = _ELITEAPIPL.Entity.GetEntity((int)_ELITEAPIMonitored.Player.TargetID);
+                XiClient.XiEntity monitoredTarget = _ELITEAPIPL.Entity.GetEntity((int)_ELITEAPIMonitored.Player.TargetID);
                 Monitoreddistance = (int)monitoredTarget.Distance;
 
                 int Songs_Possible = 0;
@@ -9378,7 +9378,7 @@
                 if (followersTargetID != -1)
                 {
                     // GRAB THE FOLLOW TARGETS ENTITY TABLE TO CHECK DISTANCE ETC
-                    EliteAPI.XiEntity followTarget = _ELITEAPIPL.Entity.GetEntity(followersTargetID);
+                    XiClient.XiEntity followTarget = _ELITEAPIPL.Entity.GetEntity(followersTargetID);
 
                     if (followTarget.Distance >= (double)Form2.config.autoFollowDistance && curePlease_autofollow == false)
                     {
@@ -9436,7 +9436,7 @@
                                     float Target_Y;
                                     float Target_Z;
 
-                                    EliteAPI.XiEntity FollowerTargetEntity = _ELITEAPIPL.Entity.GetEntity(followersTargetID);
+                                    XiClient.XiEntity FollowerTargetEntity = _ELITEAPIPL.Entity.GetEntity(followersTargetID);
 
                                     if (!string.IsNullOrEmpty(FollowerTargetEntity.Name))
                                     {
@@ -9736,13 +9736,13 @@
 
                 if (Form2.config.Fullcircle_GEOTarget == true && Form2.config.LuopanSpell_Target != "")
                 {
-                    EliteAPI.XiEntity PetsEntity = _ELITEAPIPL.Entity.GetEntity(PetsIndex);
+                    XiClient.XiEntity PetsEntity = _ELITEAPIPL.Entity.GetEntity(PetsIndex);
 
                     int FullCircle_CharID = 0;
 
                     for (int x = 0; x < 2048; x++)
                     {
-                        EliteAPI.XiEntity entity = _ELITEAPIPL.Entity.GetEntity(x);
+                        XiClient.XiEntity entity = _ELITEAPIPL.Entity.GetEntity(x);
 
                         if (entity.Name != null && entity.Name.ToLower().Equals(Form2.config.LuopanSpell_Target.ToLower()))
                         {
@@ -9753,7 +9753,7 @@
 
                     if (FullCircle_CharID != 0)
                     {
-                        EliteAPI.XiEntity FullCircleEntity = _ELITEAPIPL.Entity.GetEntity(FullCircle_CharID);
+                        XiClient.XiEntity FullCircleEntity = _ELITEAPIPL.Entity.GetEntity(FullCircle_CharID);
 
                         float fX = PetsEntity.X - FullCircleEntity.X;
                         float fY = PetsEntity.Y - FullCircleEntity.Y;
@@ -9778,7 +9778,7 @@
 
                     if (Form2.config.Fullcircle_DisableEnemy != true || (Form2.config.Fullcircle_DisableEnemy == true && _ELITEAPIPL.Resources.GetSpell(SpellCheckedResult, 0).ValidTargets == 32))
                     {
-                        EliteAPI.XiEntity PetsEntity = _ELITEAPIMonitored.Entity.GetEntity(PetsIndex);
+                        XiClient.XiEntity PetsEntity = _ELITEAPIMonitored.Entity.GetEntity(PetsIndex);
 
                         if (PetsEntity.Distance >= 10 && PetsEntity.Distance != 0 && GetAbilityRecast("Full Circle") == 0)
                         {

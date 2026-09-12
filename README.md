@@ -7,8 +7,9 @@ Running without EliteAPI (2026-09-11)
 -------------------------------------
 
 `EliteAPI.dll` / `EliteMMO.API.dll` stopped working on current clients and are no longer
-maintained. This branch replaces them with **XIScry**, which keeps the same namespace and
-type names, so every call site in CurePlease is unchanged.
+maintained. This branch replaces them with **XIScry**, an independent reimplementation that
+reads the client from outside the process. It is not the original library and contains none
+of it; see its repository for provenance.
 
 What that means for you:
 
@@ -18,8 +19,8 @@ What that means for you:
   32-bit DLL to load, and CurePlease no longer has to be 32-bit or elevated for the library's
   sake. Reading another process can still need administrator depending on how the game was
   started.
-* XIScry is a managed library that reads the client's memory from outside the process,
-  the same structures the old pair read, exposed under the same namespace and type names.
+* XIScry is a managed library that reads the client's memory from outside the process. It
+  reaches the same structures the old pair did, under its own `XIScry.Api` namespace.
 
 Three things changed in CurePlease itself, all forced by the above:
 
