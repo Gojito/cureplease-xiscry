@@ -5826,6 +5826,12 @@
                         }
                     }
 
+                    // Arts, Composure and Afflatus set the potency of everything below, so they go first.
+                    if (UseCastingModes())
+                    {
+                        return;
+                    }
+
                     List<byte> cures_required = new List<byte>();
 
                     int MemberOf_curaga = GeneratePT_structure();
@@ -5981,28 +5987,7 @@
 
                     if (_ELITEAPIPL.Player.LoginStatus == (int)LoginStatus.LoggedIn && JobAbilityLock_Check != true && CastingBackground_Check != true)
                     {
-                        if ((Form2.config.Composure) && (!plStatusCheck(StatusEffect.Composure)) && (GetAbilityRecast("Composure") == 0) && (HasAbility("Composure")))
-                        {
-
-                            JobAbility_Wait("Composure", "Composure");
-                        }
-                        else if ((Form2.config.LightArts) && (!plStatusCheck(StatusEffect.Light_Arts)) && (!plStatusCheck(StatusEffect.Addendum_White)) && (GetAbilityRecast("Light Arts") == 0) && (HasAbility("Light Arts")))
-                        {
-                            JobAbility_Wait("Light Arts", "Light Arts");
-                        }
-                        else if ((Form2.config.AddendumWhite) && (!plStatusCheck(StatusEffect.Addendum_White)) && (plStatusCheck(StatusEffect.Light_Arts)) && (GetAbilityRecast("Stratagems") == 0) && (HasAbility("Stratagems")))
-                        {
-                            JobAbility_Wait("Addendum: White", "Addendum: White");
-                        }
-                        else if ((Form2.config.DarkArts) && (!plStatusCheck(StatusEffect.Dark_Arts)) && (!plStatusCheck(StatusEffect.Addendum_Black)) && (GetAbilityRecast("Dark Arts") == 0) && (HasAbility("Dark Arts")))
-                        {
-                            JobAbility_Wait("Dark Arts", "Dark Arts");
-                        }
-                        else if ((Form2.config.AddendumBlack) && (plStatusCheck(StatusEffect.Dark_Arts)) && (!plStatusCheck(StatusEffect.Addendum_Black)) && (GetAbilityRecast("Stratagems") == 0) && (HasAbility("Stratagems")))
-                        {
-                            JobAbility_Wait("Addendum: Black", "Addendum: Black");
-                        }
-                        else if ((Form2.config.plReraise) && (Form2.config.EnlightenmentReraise) && (!plStatusCheck(StatusEffect.Reraise)) && _ELITEAPIPL.Player.MainJob == 20 && !BuffChecker(401, 0) && HasAbility("Enlightenment"))
+                        if ((Form2.config.plReraise) && (Form2.config.EnlightenmentReraise) && (!plStatusCheck(StatusEffect.Reraise)) && _ELITEAPIPL.Player.MainJob == 20 && !BuffChecker(401, 0) && HasAbility("Enlightenment"))
                         {
                             CastPlReraiseEnlightenment();
                         }
@@ -6325,30 +6310,9 @@
                         }
 
 
-                        // so PL job abilities are in order
                         if (!plStatusCheck(StatusEffect.Amnesia) && (_ELITEAPIPL.Player.Status == 1 || _ELITEAPIPL.Player.Status == 0))
                         {
-                            if ((Form2.config.AfflatusSolace) && (!plStatusCheck(StatusEffect.Afflatus_Solace)) && (GetAbilityRecast("Afflatus Solace") == 0) && (HasAbility("Afflatus Solace")))
-                            {
-                                JobAbility_Wait("Afflatus Solace", "Afflatus Solace");
-                            }
-                            else if ((Form2.config.AfflatusMisery) && (!plStatusCheck(StatusEffect.Afflatus_Misery)) && (GetAbilityRecast("Afflatus Misery") == 0) && (HasAbility("Afflatus Misery")))
-                            {
-                                JobAbility_Wait("Afflatus Misery", "Afflatus Misery");
-                            }
-                            else if ((Form2.config.Composure) && (!plStatusCheck(StatusEffect.Composure)) && (GetAbilityRecast("Composure") == 0) && (HasAbility("Composure")))
-                            {
-                                JobAbility_Wait("Composure #2", "Composure");
-                            }
-                            else if ((Form2.config.LightArts) && (!plStatusCheck(StatusEffect.Light_Arts)) && (!plStatusCheck(StatusEffect.Addendum_White)) && (GetAbilityRecast("Light Arts") == 0) && (HasAbility("Light Arts")))
-                            {
-                                JobAbility_Wait("Light Arts #2", "Light Arts");
-                            }
-                            else if ((Form2.config.AddendumWhite) && (!plStatusCheck(StatusEffect.Addendum_White)) && (GetAbilityRecast("Stratagems") == 0) && (HasAbility("Stratagems")))
-                            {
-                                JobAbility_Wait("Addendum: White", "Addendum: White");
-                            }
-                            else if ((Form2.config.Sublimation) && (!plStatusCheck(StatusEffect.Sublimation_Activated)) && (!plStatusCheck(StatusEffect.Sublimation_Complete)) && (!plStatusCheck(StatusEffect.Refresh)) && (GetAbilityRecast("Sublimation") == 0) && (HasAbility("Sublimation")))
+                            if ((Form2.config.Sublimation) && (!plStatusCheck(StatusEffect.Sublimation_Activated)) && (!plStatusCheck(StatusEffect.Sublimation_Complete)) && (!plStatusCheck(StatusEffect.Refresh)) && (GetAbilityRecast("Sublimation") == 0) && (HasAbility("Sublimation")))
                             {
                                 JobAbility_Wait("Sublimation, Charging", "Sublimation");
                             }
@@ -6652,6 +6616,49 @@
                     }
                 }
             }
+        }
+
+        private bool UseCastingModes()
+        {
+            if (plStatusCheck(StatusEffect.Amnesia) || (_ELITEAPIPL.Player.Status != 1 && _ELITEAPIPL.Player.Status != 0))
+            {
+                return false;
+            }
+
+            if ((Form2.config.AfflatusSolace) && (!plStatusCheck(StatusEffect.Afflatus_Solace)) && (GetAbilityRecast("Afflatus Solace") == 0) && (HasAbility("Afflatus Solace")))
+            {
+                JobAbility_Wait("Afflatus Solace", "Afflatus Solace");
+            }
+            else if ((Form2.config.AfflatusMisery) && (!plStatusCheck(StatusEffect.Afflatus_Misery)) && (GetAbilityRecast("Afflatus Misery") == 0) && (HasAbility("Afflatus Misery")))
+            {
+                JobAbility_Wait("Afflatus Misery", "Afflatus Misery");
+            }
+            else if ((Form2.config.Composure) && (!plStatusCheck(StatusEffect.Composure)) && (GetAbilityRecast("Composure") == 0) && (HasAbility("Composure")))
+            {
+                JobAbility_Wait("Composure", "Composure");
+            }
+            else if ((Form2.config.LightArts) && (!plStatusCheck(StatusEffect.Light_Arts)) && (!plStatusCheck(StatusEffect.Addendum_White)) && (GetAbilityRecast("Light Arts") == 0) && (HasAbility("Light Arts")))
+            {
+                JobAbility_Wait("Light Arts", "Light Arts");
+            }
+            else if ((Form2.config.AddendumWhite) && (!plStatusCheck(StatusEffect.Addendum_White)) && (plStatusCheck(StatusEffect.Light_Arts)) && (GetAbilityRecast("Stratagems") == 0) && (HasAbility("Stratagems")))
+            {
+                JobAbility_Wait("Addendum: White", "Addendum: White");
+            }
+            else if ((Form2.config.DarkArts) && (!plStatusCheck(StatusEffect.Dark_Arts)) && (!plStatusCheck(StatusEffect.Addendum_Black)) && (GetAbilityRecast("Dark Arts") == 0) && (HasAbility("Dark Arts")))
+            {
+                JobAbility_Wait("Dark Arts", "Dark Arts");
+            }
+            else if ((Form2.config.AddendumBlack) && (plStatusCheck(StatusEffect.Dark_Arts)) && (!plStatusCheck(StatusEffect.Addendum_Black)) && (GetAbilityRecast("Stratagems") == 0) && (HasAbility("Stratagems")))
+            {
+                JobAbility_Wait("Addendum: Black", "Addendum: Black");
+            }
+            else
+            {
+                return false;
+            }
+
+            return true;
         }
 
         private void CastPlReraiseEnlightenment()
