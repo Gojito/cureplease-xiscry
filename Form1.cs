@@ -280,18 +280,59 @@
         public int firstTime_Pause = 0;
 
 
+        // The client's recast entry holds the ability's recast LENGTH, written the first time it
+        // is used, and never counts down: it reads the same while the ability is recasting as it
+        // does when the ability is ready. So the clock is kept here, from when CurePlease last
+        // sent the ability. A zero entry means the ability has not been used and is ready.
+        private readonly Dictionary<int, DateTime> abilityFiredAt = new Dictionary<int, DateTime>();
+
         public int GetAbilityRecast(string checked_abilityName)
         {
-            int id = _ELITEAPIPL.Resources.GetAbility(checked_abilityName, 0).TimerID;
-            List<int> IDs = _ELITEAPIPL.Recast.GetAbilityIds();
-            for (int x = 0; x < IDs.Count; x++)
+            XiClient.IAbility ability = _ELITEAPIPL.Resources.GetAbility(checked_abilityName, 0);
+
+            if (ability == null)
             {
-                if (IDs[x] == id)
+                return 0;
+            }
+
+            int id = ability.TimerID;
+            int length = 0;
+
+            // Slot by slot. The compacted id list leaves empty slots out, so a position in it
+            // stops being a slot index as soon as the table has a gap.
+            for (int slot = 0; slot < 32; slot++)
+            {
+                if (_ELITEAPIPL.Recast.GetAbilityId(slot) == id)
                 {
-                    return _ELITEAPIPL.Recast.GetAbilityRecast(x);
+                    length = _ELITEAPIPL.Recast.GetAbilityRecast(slot);
+                    break;
                 }
             }
-            return 0;
+
+            DateTime firedAt;
+
+            if (length <= 0 || !abilityFiredAt.TryGetValue(id, out firedAt))
+            {
+                return 0;
+            }
+
+            int elapsed = (int)(DateTime.Now - firedAt).TotalSeconds;
+
+            return elapsed >= length ? 0 : length - elapsed;
+        }
+
+        // Every job ability goes out through here so the clock above starts, including one the
+        // game then refuses: that costs a single rejected command instead of a retry every pass.
+        private void SendJobAbility(string ability, string target)
+        {
+            XiClient.IAbility data = _ELITEAPIPL.Resources.GetAbility(ability, 0);
+
+            if (data != null)
+            {
+                abilityFiredAt[data.TimerID] = DateTime.Now;
+            }
+
+            _ELITEAPIPL.ThirdParty.SendString("/ja \"" + ability + "\" " + target);
         }
 
         public int CheckSpellRecast(string checked_recastspellName)
@@ -5655,7 +5696,7 @@
                 }
                 else if (Form2.config.Convert && (_ELITEAPIPL.Player.MP <= Form2.config.convertMP) && (GetAbilityRecast("Convert") == 0) && !_ELITEAPIPL.Player.Buffs.Contains((short)StatusEffect.Weakness))
                 {
-                    _ELITEAPIPL.ThirdParty.SendString("/ja \"Convert\" <me>");
+                    SendJobAbility("Convert", "<me>");
                     return;
                 }
                 else if (Form2.config.RadialArcana && (_ELITEAPIPL.Player.MP <= Form2.config.RadialArcanaMP) && (GetAbilityRecast("Radial Arcana") == 0) && !_ELITEAPIPL.Player.Buffs.Contains((short)StatusEffect.Weakness))
@@ -5667,7 +5708,7 @@
                     }
                     else if (_ELITEAPIPL.Player.Pet.HealthPercent >= 1 && _ELITEAPIPL.Player.Pet.Distance >= 9 && (GetAbilityRecast("Full Circle") == 0))
                     {
-                        _ELITEAPIPL.ThirdParty.SendString("/ja \"Full Circle\" <me>");
+                        SendJobAbility("Full Circle", "<me>");
                         await Task.Delay(2000);
                         string SpellCheckedResult = ReturnGeoSpell(Form2.config.RadialArcana_Spell, 2);
                         CastSpell("<me>", SpellCheckedResult);
@@ -6367,7 +6408,7 @@
                                                         XiClient.XiEntity playerInfo = _ELITEAPIPL.Entity.GetEntity((int)pData.TargetIndex);
                                                         if (playerInfo.Distance < 10 && playerInfo.Distance > 0 && pData.CurrentMP <= Form2.config.DevotionMP && pData.CurrentMPP <= 30)
                                                         {
-                                                            _ELITEAPIPL.ThirdParty.SendString("/ja \"Devotion\" " + Form2.config.DevotionTargetName);
+                                                            SendJobAbility("Devotion", Form2.config.DevotionTargetName);
                                                             Thread.Sleep(TimeSpan.FromSeconds(2));
                                                         }
                                                     }
@@ -6378,7 +6419,7 @@
 
                                                     if ((pData.CurrentMP <= Form2.config.DevotionMP) && (playerInfo.Distance < 10) && pData.CurrentMPP <= 30)
                                                     {
-                                                        _ELITEAPIPL.ThirdParty.SendString("/ja \"Devotion\" " + pData.Name);
+                                                        SendJobAbility("Devotion", pData.Name);
                                                         Thread.Sleep(TimeSpan.FromSeconds(2));
                                                         break;
                                                     }
@@ -6396,7 +6437,7 @@
                                                         XiClient.XiEntity playerInfo = _ELITEAPIPL.Entity.GetEntity((int)pData.TargetIndex);
                                                         if (playerInfo.Distance < 10 && playerInfo.Distance > 0 && pData.CurrentMP <= Form2.config.DevotionMP)
                                                         {
-                                                            _ELITEAPIPL.ThirdParty.SendString("/ja \"Devotion\" " + Form2.config.DevotionTargetName);
+                                                            SendJobAbility("Devotion", Form2.config.DevotionTargetName);
                                                             Thread.Sleep(TimeSpan.FromSeconds(2));
                                                         }
                                                     }
@@ -6407,7 +6448,7 @@
 
                                                     if ((pData.CurrentMP <= Form2.config.DevotionMP) && (playerInfo.Distance < 10) && pData.CurrentMPP <= 50)
                                                     {
-                                                        _ELITEAPIPL.ThirdParty.SendString("/ja \"Devotion\" " + pData.Name);
+                                                        SendJobAbility("Devotion", pData.Name);
                                                         Thread.Sleep(TimeSpan.FromSeconds(2));
                                                         break;
                                                     }
@@ -6425,7 +6466,7 @@
                                                         XiClient.XiEntity playerInfo = _ELITEAPIPL.Entity.GetEntity((int)pData.TargetIndex);
                                                         if (playerInfo.Distance < 10 && playerInfo.Distance > 0 && pData.CurrentMP <= Form2.config.DevotionMP)
                                                         {
-                                                            _ELITEAPIPL.ThirdParty.SendString("/ja \"Devotion\" " + Form2.config.DevotionTargetName);
+                                                            SendJobAbility("Devotion", Form2.config.DevotionTargetName);
                                                             Thread.Sleep(TimeSpan.FromSeconds(2));
                                                         }
                                                     }
@@ -6436,7 +6477,7 @@
 
                                                     if ((pData.CurrentMP <= Form2.config.DevotionMP) && (playerInfo.Distance < 10) && pData.CurrentMPP <= 50)
                                                     {
-                                                        _ELITEAPIPL.ThirdParty.SendString("/ja \"Devotion\" " + pData.Name);
+                                                        SendJobAbility("Devotion", pData.Name);
                                                         Thread.Sleep(TimeSpan.FromSeconds(2));
                                                         break;
                                                     }
@@ -7848,7 +7889,7 @@
               JobAbilityLock_Check = true;
               castingLockLabel.Text = "Casting is LOCKED for a JA.";
               currentAction.Text = "Using a Job Ability: " + JobabilityDATA;
-              _ELITEAPIPL.ThirdParty.SendString("/ja \"" + JobAbilityName + "\" <me>");
+              SendJobAbility(JobAbilityName, "<me>");
               await Task.Delay(TimeSpan.FromSeconds(2));
               castingLockLabel.Text = "Casting is UNLOCKED";
               currentAction.Text = string.Empty;
@@ -9783,7 +9824,7 @@
 
                         if (generatedDistance >= 10)
                         {
-                            _ELITEAPIPL.ThirdParty.SendString("/ja \"Full Circle\" <me>");
+                            SendJobAbility("Full Circle", "<me>");
                         }
                     }
 
@@ -9802,7 +9843,7 @@
 
                         if (PetsEntity.Distance >= 10 && PetsEntity.Distance != 0 && GetAbilityRecast("Full Circle") == 0)
                         {
-                            _ELITEAPIPL.ThirdParty.SendString("/ja \"Full Circle\" <me>");
+                            SendJobAbility("Full Circle", "<me>");
                         }
                     }
                 }
