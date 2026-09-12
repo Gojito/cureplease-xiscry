@@ -280,10 +280,9 @@
         public int firstTime_Pause = 0;
 
 
-        // The client's recast entry holds the ability's recast LENGTH, written the first time it
-        // is used, and never counts down: it reads the same while the ability is recasting as it
-        // does when the ability is ready. So the clock is kept here, from when CurePlease last
-        // sent the ability. A zero entry means the ability has not been used and is ready.
+        // Sent-at times, for the settle window below and for the fallback when the client's own
+        // countdown cannot be read.
+        private static readonly TimeSpan AbilitySettle = TimeSpan.FromSeconds(2);
         private readonly Dictionary<int, DateTime> abilityFiredAt = new Dictionary<int, DateTime>();
         private byte lastMainJob;
 
@@ -297,22 +296,61 @@
             }
 
             int id = ability.TimerID;
-            int length = 0;
+            DateTime firedAt;
 
-            // Slot by slot. The compacted id list leaves empty slots out, so a position in it
-            // stops being a slot index as soon as the table has a gap.
+            // The server answers a job ability with a packet of its own, so the countdown is not
+            // there the instant the command goes out.
+            if (abilityFiredAt.TryGetValue(id, out firedAt) && DateTime.UtcNow - firedAt < AbilitySettle)
+            {
+                return 1;
+            }
+
+            int slot = AbilitySlot(id);
+
+            if (slot < 0)
+            {
+                return 0;
+            }
+
+            try
+            {
+                int ticks = _ELITEAPIPL.Recast.GetAbilityRecast(slot);
+
+                return ticks <= 0 ? 0 : (ticks + 59) / 60;
+            }
+            catch (XIScry.GameProcessException)
+            {
+                return SelfTimedRecast(id, slot);
+            }
+        }
+
+        private int AbilitySlot(int timerId)
+        {
             for (int slot = 0; slot < 32; slot++)
             {
-                if (_ELITEAPIPL.Recast.GetAbilityId(slot) == id)
+                if (_ELITEAPIPL.Recast.GetAbilityId(slot) == timerId)
                 {
-                    length = _ELITEAPIPL.Recast.GetAbilityRecast(slot);
-                    break;
+                    return slot;
                 }
             }
 
+            return -1;
+        }
+
+        // Only reached when the countdown cannot be read. The entry beside it holds the ability's
+        // recast length, so fall back to timing it from when we last sent it.
+        private int SelfTimedRecast(int id, int slot)
+        {
             DateTime firedAt;
 
-            if (length <= 0 || !abilityFiredAt.TryGetValue(id, out firedAt))
+            if (!abilityFiredAt.TryGetValue(id, out firedAt))
+            {
+                return 0;
+            }
+
+            int length = _ELITEAPIPL.Recast.GetAbilityRecastLength(slot);
+
+            if (length <= 0)
             {
                 return 0;
             }
