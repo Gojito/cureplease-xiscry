@@ -194,20 +194,6 @@
             return item != null ? (ushort)item.ItemID : (ushort)0;
         }
 
-        private int GetAbilityRecastBySpellId(int id)
-        {
-            List<int> abilityIds = _ELITEAPIPL.Recast.GetAbilityIds();
-            for (int x = 0; x < abilityIds.Count; x++)
-            {
-                if (abilityIds[x] == id)
-                {
-                    return _ELITEAPIPL.Recast.GetAbilityRecast(x);
-                }
-            }
-
-            return -1;
-        }
-
         public static XiClient _ELITEAPIPL;
 
         public XiClient _ELITEAPIMonitored;
@@ -290,12 +276,13 @@
         {
             XiClient.IAbility ability = _ELITEAPIPL.Resources.GetAbility(checked_abilityName, 0);
 
-            if (ability == null)
-            {
-                return 0;
-            }
+            return ability == null ? 0 : GetAbilityRecastByTimerId(ability.TimerID);
+        }
 
-            int id = ability.TimerID;
+        // Seconds remaining, zero when ready. By timer id as well as by name, because a charge
+        // based ability shares one timer across every stratagem and belongs to none of them.
+        public int GetAbilityRecastByTimerId(int id)
+        {
             DateTime firedAt;
 
             // The server answers a job ability with a packet of its own, so the countdown is not
@@ -8874,7 +8861,7 @@
                 {
                     if (plStatusCheck(StatusEffect.Light_Arts) || plStatusCheck(StatusEffect.Addendum_White))
                     {
-                        int currentRecastTimer = GetAbilityRecastBySpellId(231);
+                        int chargeRecast = GetAbilityRecastByTimerId(231);
 
                         int SpentPoints = _ELITEAPIPL.Player.GetJobPoints(20).SpentJobPoints;
 
@@ -8919,23 +8906,13 @@
                         // Now knowing what the time between charges is lets calculate how many
                         // charges are available
 
-                        if (currentRecastTimer == 0)
-                        {
-                            currentSCHCharges = baseCharges;
-                        }
-                        else
-                        {
-                            int t = currentRecastTimer / 60;
-
-                            int stratsUsed = t / baseTimer;
-
-                            currentSCHCharges = (int)Math.Ceiling((decimal)baseCharges - stratsUsed);
-
-                            if (baseTimer == 120)
-                            {
-                                currentSCHCharges -= 1;
-                            }
-                        }
+                        // The timer counts down from the charge time multiplied by the charges
+                        // spent, so what is left over the charge time, rounded up, is how many
+                        // are still out. Rounding down instead reports a charge that is still
+                        // recharging as available.
+                        currentSCHCharges = chargeRecast <= 0
+                            ? baseCharges
+                            : Math.Max(0, baseCharges - (int)Math.Ceiling(chargeRecast / (double)baseTimer));
                     }
                 }
             }
