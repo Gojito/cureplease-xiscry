@@ -5244,6 +5244,14 @@
 
                 XiClient.ISpell magic = _plClient.Resources.GetSpell(spellName.Trim(), 0);
 
+                // The game refuses a spell there is no MP for, but the lock below is taken either
+                // way, and the refused cast is retried for as long as the MP stays down. That lock
+                // is also what silences every job ability, Sublimation included.
+                if (magic.MPCost > 0 && _plClient.Player.MP < magic.MPCost)
+                {
+                    return;
+                }
+
                 castingSpell = magic.Name[0];
 
                 // Arm the hold and stop moving BEFORE the /ma. Stopping after it, which is
@@ -6086,6 +6094,13 @@
 
                     if (_plClient.Player.LoginStatus == (int)LoginStatus.LoggedIn && JobAbilityLock_Check != true && CastingBackground_Check != true)
                     {
+                        // MP is recovered before it is spent. The self-buff chain below takes the
+                        // cast lock, and a job ability is dropped in silence while that is held.
+                        if (RecoverWithSublimation())
+                        {
+                            return;
+                        }
+
                         if ((Form2.config.plReraise) && (Form2.config.EnlightenmentReraise) && (!plStatusCheck(StatusEffect.Reraise)) && _plClient.Player.MainJob == 20 && !BuffChecker(401, 0) && HasAbility("Enlightenment"))
                         {
                             CastPlReraiseEnlightenment();
@@ -6411,15 +6426,7 @@
 
                         if (!plStatusCheck(StatusEffect.Amnesia) && (_plClient.Player.Status == 1 || _plClient.Player.Status == 0))
                         {
-                            if ((Form2.config.Sublimation) && (!plStatusCheck(StatusEffect.Sublimation_Activated)) && (!plStatusCheck(StatusEffect.Sublimation_Complete)) && (!plStatusCheck(StatusEffect.Refresh)) && (GetAbilityRecast("Sublimation") == 0) && (HasAbility("Sublimation")))
-                            {
-                                JobAbility_Wait("Sublimation, Charging", "Sublimation");
-                            }
-                            else if ((Form2.config.Sublimation) && ((_plClient.Player.MPMax - _plClient.Player.MP) > Form2.config.sublimationMP) && (plStatusCheck(StatusEffect.Sublimation_Complete)) && (GetAbilityRecast("Sublimation") == 0) && (HasAbility("Sublimation")))
-                            {
-                                JobAbility_Wait("Sublimation, Recovery", "Sublimation");
-                            }
-                            else if ((Form2.config.DivineCaress) && (Form2.config.plDebuffEnabled || Form2.config.monitoredDebuffEnabled || Form2.config.enablePartyDebuffRemoval) && (GetAbilityRecast("Divine Caress") == 0) && (HasAbility("Divine Caress")))
+                            if ((Form2.config.DivineCaress) && (Form2.config.plDebuffEnabled || Form2.config.monitoredDebuffEnabled || Form2.config.enablePartyDebuffRemoval) && (GetAbilityRecast("Divine Caress") == 0) && (HasAbility("Divine Caress")))
                             {
                                 JobAbility_Wait("Divine Caress", "Divine Caress");
                             }
@@ -7948,6 +7955,37 @@
                     JobAbilityLock_Check = false;
                 }));
             }
+        }
+
+        // True once a Sublimation has been sent, which ends the tick so nothing else takes the
+        // cast lock behind it.
+        private bool RecoverWithSublimation()
+        {
+            if (!Form2.config.Sublimation
+                || plStatusCheck(StatusEffect.Amnesia)
+                || (_plClient.Player.Status != 1 && _plClient.Player.Status != 0)
+                || GetAbilityRecast("Sublimation") != 0
+                || !HasAbility("Sublimation"))
+            {
+                return false;
+            }
+
+            if (!plStatusCheck(StatusEffect.Sublimation_Activated)
+                && !plStatusCheck(StatusEffect.Sublimation_Complete)
+                && !plStatusCheck(StatusEffect.Refresh))
+            {
+                JobAbility_Wait("Sublimation, Charging", "Sublimation");
+                return true;
+            }
+
+            if (plStatusCheck(StatusEffect.Sublimation_Complete)
+                && (_plClient.Player.MPMax - _plClient.Player.MP) > Form2.config.sublimationMP)
+            {
+                JobAbility_Wait("Sublimation, Recovery", "Sublimation");
+                return true;
+            }
+
+            return false;
         }
 
         private void JobAbility_Wait(string JobabilityDATA, string JobAbilityName)
