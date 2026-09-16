@@ -75,7 +75,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!-- XIScry replaces the abandoned EliteMMO.API / EliteAPI pair, under the same namespace. -->
+    <!-- XIScry replaces the abandoned EliteMMO.API / EliteAPI pair, under its own namespace, XIScry.Api. -->
     <Reference Include="XIScry">
       <HintPath>.\XIScry.dll</HintPath>
     </Reference>

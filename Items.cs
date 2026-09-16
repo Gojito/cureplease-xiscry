@@ -64,14 +64,14 @@ namespace CurePlease
 
         //    private List<int> GetTempItems ()
         //    {
-        //        for (byte i = 1; i <= _ELITEAPIPL.Item.TemporaryCount; i++)
+        //        for (byte i = 1; i <= _plClient.Item.TemporaryCount; i++)
         //        {
 
         //            foreach (var tempUsableItem in Enum.GetValues(typeof(TempUsableItems)))
         //            {
-        //                if (_ELITEAPIPL.Item.GetTempItemIDByIndex(i) == (int)tempUsableItem)
+        //                if (_plClient.Item.GetTempItemIDByIndex(i) == (int)tempUsableItem)
         //                {
-        //                    this.TempItemListIDs.Add(_ELITEAPIPL.Item.GetTempItemIDByIndex(i));
+        //                    this.TempItemListIDs.Add(_plClient.Item.GetTempItemIDByIndex(i));
         //                }
         //            }
                     
@@ -81,7 +81,7 @@ namespace CurePlease
 
         //    private bool HasTempItem (TempUsableItems tempitemname)
         //    {                
-        //        if (_ELITEAPIPL.Item.GetTempItemCount((ushort)Enum.Parse(typeof(TempUsableItems), tempitemname.ToString())) > 0)
+        //        if (_plClient.Item.GetTempItemCount((ushort)Enum.Parse(typeof(TempUsableItems), tempitemname.ToString())) > 0)
         //        {
         //            return true;
         //        }                
@@ -95,14 +95,14 @@ namespace CurePlease
         //            return;
 
         //        // Don't use items if your weakened
-        //        if (_ELITEAPIPL.Player.StatusEffects.Any(status => status == StatusEffect.Weakness))
+        //        if (_plClient.Player.StatusEffects.Any(status => status == StatusEffect.Weakness))
         //        {
         //            return;
         //        }
 
-        //        int mpcurrent = _ELITEAPIPL.Player.MPCurrent;
-        //        int mpmax = _ELITEAPIPL.Player.MPMax;
-        //        int mppcurrent = _ELITEAPIPL.Player.MPPCurrent;
+        //        int mpcurrent = _plClient.Player.MPCurrent;
+        //        int mpmax = _plClient.Player.MPMax;
+        //        int mppcurrent = _plClient.Player.MPPCurrent;
 
                 
         //        if (mpcurrent + 1000 < mpmax)
@@ -142,15 +142,15 @@ namespace CurePlease
 
         //    private void UseItem(TempUsableItems item)
         //    {
-        //        if (_ELITEAPIPL.Player.Status == Status.Standing && this.HasTempItem(item))
+        //        if (_plClient.Player.Status == Status.Standing && this.HasTempItem(item))
         //        {
-        //            _ELITEAPIPL.ThirdParty.SendString(string.Format("/item {0} <me>", FFACE.ParseResources.GetItemName((int)Enum.Parse(typeof(TempUsableItems), item.ToString()))));
+        //            _plClient.ThirdParty.SendString(string.Format("/item {0} <me>", FFACE.ParseResources.GetItemName((int)Enum.Parse(typeof(TempUsableItems), item.ToString()))));
         //        }
         //    }
 
         //    private int GetMPPfromInt()
         //    {
-        //        return ((_ELITEAPIPL.Player.MPCurrent/_ELITEAPIPL.Player.MPMax)*100);
+        //        return ((_plClient.Player.MPCurrent/_plClient.Player.MPMax)*100);
         //    }
         }
     }

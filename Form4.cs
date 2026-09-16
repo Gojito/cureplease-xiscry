@@ -21,12 +21,12 @@
             {
                 #region "== First generate all current chat entries."
 
-                _ELITEAPIPL = new XiClient((int)f1.activeprocessids.SelectedItem);
-                characterNamed_label.Text = "Chatlog for character: " + _ELITEAPIPL.Player.Name + "\n";
+                _plClient = new XiClient((int)f1.activeprocessids.SelectedItem);
+                characterNamed_label.Text = "Chatlog for character: " + _plClient.Player.Name + "\n";
 
                 XiClient.ChatEntry cl = new XiClient.ChatEntry();
 
-                while ((cl = _ELITEAPIPL.Chat.GetNextChatLine()) != null)
+                while ((cl = _plClient.Chat.GetNextChatLine()) != null)
                 {
                     chatlog_box.AppendText(cl.Text, cl.ChatColor);
                     chatlog_box.AppendText(Environment.NewLine);
@@ -56,7 +56,7 @@
 
             XiClient.ChatEntry cl = new XiClient.ChatEntry();
 
-            while ((cl = _ELITEAPIPL.Chat.GetNextChatLine()) != null)
+            while ((cl = _plClient.Chat.GetNextChatLine()) != null)
             {
                 chatlog_box.AppendText(cl.Text, cl.ChatColor);
                 chatlog_box.AppendText(Environment.NewLine);
@@ -73,7 +73,7 @@
 
         private void SendMessage_botton_Click(object sender, EventArgs e)
         {
-            _ELITEAPIPL.ThirdParty.SendString(ChatLogMessage_textfield.Text);
+            _plClient.ThirdParty.SendString(ChatLogMessage_textfield.Text);
             ChatLogMessage_textfield.Text = string.Empty;
         }
     }
