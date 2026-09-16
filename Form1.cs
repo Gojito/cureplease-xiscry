@@ -109,6 +109,20 @@
         public bool EclipticStillUp = false;
 
         public bool CastingBackground_Check = false;
+
+        // Movement stops BEFORE the cast exists and stays stopped on a plain clock, never on
+        // a reading of whether we appear to be casting. On this client the cast bar does not
+        // sustain through a cast, and an interrupted cast freezes it, so a reactive check
+        // reads "not casting" at exactly the moment it most needs to say otherwise. The clock
+        // covers the start; the cast lock covers the rest of the spell.
+        private DateTime followHoldUntil = DateTime.MinValue;
+
+        private const double FollowHoldSeconds = 3.0;
+
+        // Which cast owns the lock. The packet handlers release it on a 3s delay, long enough
+        // for the next cast to have taken it, so a delayed release must prove the lock is
+        // still the one it armed against before clearing it.
+        private volatile int castLockGeneration;
         public bool JobAbilityLock_Check = false;
 
         public string JobAbilityCMD = String.Empty;
@@ -5232,6 +5246,15 @@
 
                 castingSpell = magic.Name[0];
 
+                // Arm the hold and stop moving BEFORE the /ma. Stopping after it, which is
+                // where the lock is set, leaves the follow worker free to write one more
+                // auto-run tick into the cast we just asked for.
+                if (Form2.config.followStopToCast)
+                {
+                    followHoldUntil = DateTime.Now.AddSeconds(FollowHoldSeconds);
+                    _plClient.AutoFollow.IsAutoFollowing = false;
+                }
+
                 _plClient.ThirdParty.SendString("/ma \"" + castingSpell + "\" " + partyMemberName);
 
                 if (OptionalExtras != null)
@@ -5244,6 +5267,7 @@
                 }
 
                 CastingBackground_Check = true;
+                castLockGeneration++;
 
                 // Stop following now; the follow loop only re-checks between ticks.
                 if (Form2.config.followStopToCast)
@@ -9537,9 +9561,13 @@
 
                                     if (!string.IsNullOrEmpty(FollowerTargetEntity.Name))
                                     {
-                                        while (followTarget.Distance >= (double)Form2.config.autoFollowDistance)
+                                        // Pausing clears the auto-run flag once, from the UI thread; without pauseActions
+                                        // here this loop sets it straight back on its next pass, and only closing the
+                                        // process stops the character walking.
+                                        while (!pauseActions && followTarget.Distance >= (double)Form2.config.autoFollowDistance)
                                         {
-                                            if (Form2.config.followStopToCast && CastingBackground_Check)
+                                            if (Form2.config.followStopToCast
+                                                && (CastingBackground_Check || DateTime.Now < followHoldUntil))
                                             {
                                                 _plClient.AutoFollow.IsAutoFollowing = false;
                                                 Thread.Sleep(TimeSpan.FromSeconds(0.03));
@@ -9568,14 +9596,18 @@
                                             float dZ = Target_Z - Player_Z;
 
                                             // A cast can begin mid-iteration, so check again before moving.
-                                            if (Form2.config.followStopToCast && CastingBackground_Check)
+                                            if (Form2.config.followStopToCast
+                                                && (CastingBackground_Check || DateTime.Now < followHoldUntil))
                                             {
                                                 _plClient.AutoFollow.IsAutoFollowing = false;
                                                 Thread.Sleep(TimeSpan.FromSeconds(0.03));
                                                 continue;
                                             }
 
-                                            _plClient.AutoFollow.SetAutoFollowCoords(dX, dY, dZ);
+                                            // The two structures name their axes differently: a position is X, Z, Y with Y
+                                            // the height, the auto-run delta is X, Y, Z with Z the height. So the height
+                                            // goes in last, not second.
+                                            _plClient.AutoFollow.SetAutoFollowCoords(dX, dZ, dY);
                                             _plClient.AutoFollow.IsAutoFollowing = true;
                                             curePlease_autofollow = true;
 
@@ -9604,6 +9636,7 @@
                                                 }
                                             }
                                         }
+
 
                                         _plClient.AutoFollow.IsAutoFollowing = false;
                                         curePlease_autofollow = false;
@@ -9707,6 +9740,7 @@
                                 Invoke((MethodInvoker)(() =>
                           {
                               CastingBackground_Check = true;
+                              castLockGeneration++;
                               castingLockLabel.Text = "PACKET: Casting is LOCKED";
                           }));
 
@@ -9717,9 +9751,12 @@
                                 Invoke((MethodInvoker)(async () =>
                           {
                               ProtectCasting.CancelAsync();
+                              int armed = castLockGeneration;
                               castingLockLabel.Text = "PACKET: Casting is INTERRUPTED";
                               await Task.Delay(TimeSpan.FromSeconds(3));
+                              if (castLockGeneration != armed) { return; }
                               castingLockLabel.Text = "Casting is UNLOCKED";
+                              followHoldUntil = DateTime.MinValue;
                               CastingBackground_Check = false;
                           }));
                             }
@@ -9729,9 +9766,12 @@
                                 Invoke((MethodInvoker)(async () =>
                           {
                               ProtectCasting.CancelAsync();
+                              int armed = castLockGeneration;
                               castingLockLabel.Text = "PACKET: Casting is soon to be AVAILABLE!";
                               await Task.Delay(TimeSpan.FromSeconds(3));
+                              if (castLockGeneration != armed) { return; }
                               castingLockLabel.Text = "Casting is UNLOCKED";
+                              followHoldUntil = DateTime.MinValue;
                               currentAction.Text = string.Empty;
                               castingSpell = string.Empty;
                               CastingBackground_Check = false;
