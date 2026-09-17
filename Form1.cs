@@ -4529,7 +4529,10 @@
             {
                 int BreakOut = 0;
 
-                List<XiClient.PartyMember> partyMembers = _plClient.Party.GetPartyMembers();
+                // The monitored client's roster, because the timers below are keyed by ITS slot
+                // numbers. Slot 0 is whoever is reading, so the PL's roster numbers the same
+                // people differently and every reset would land on the wrong member.
+                List<XiClient.PartyMember> partyMembers = _monitoredClient.Party.GetPartyMembers();
 
                 List<BuffStorage> generated_base_list = ActiveBuffs.ToList();
 
@@ -5605,6 +5608,18 @@
             playerPhalanx_IISpan[3] = currentTime.Subtract(playerPhalanx_II[3]);
             playerPhalanx_IISpan[4] = currentTime.Subtract(playerPhalanx_II[4]);
             playerPhalanx_IISpan[5] = currentTime.Subtract(playerPhalanx_II[5]);
+            playerPhalanx_IISpan[6] = currentTime.Subtract(playerPhalanx_II[6]);
+            playerPhalanx_IISpan[7] = currentTime.Subtract(playerPhalanx_II[7]);
+            playerPhalanx_IISpan[8] = currentTime.Subtract(playerPhalanx_II[8]);
+            playerPhalanx_IISpan[9] = currentTime.Subtract(playerPhalanx_II[9]);
+            playerPhalanx_IISpan[10] = currentTime.Subtract(playerPhalanx_II[10]);
+            playerPhalanx_IISpan[11] = currentTime.Subtract(playerPhalanx_II[11]);
+            playerPhalanx_IISpan[12] = currentTime.Subtract(playerPhalanx_II[12]);
+            playerPhalanx_IISpan[13] = currentTime.Subtract(playerPhalanx_II[13]);
+            playerPhalanx_IISpan[14] = currentTime.Subtract(playerPhalanx_II[14]);
+            playerPhalanx_IISpan[15] = currentTime.Subtract(playerPhalanx_II[15]);
+            playerPhalanx_IISpan[16] = currentTime.Subtract(playerPhalanx_II[16]);
+            playerPhalanx_IISpan[17] = currentTime.Subtract(playerPhalanx_II[17]);
 
             // Calculate time since regen was cast on particular player
             playerRegen_Span[0] = currentTime.Subtract(playerRegen[0]);
@@ -5613,6 +5628,18 @@
             playerRegen_Span[3] = currentTime.Subtract(playerRegen[3]);
             playerRegen_Span[4] = currentTime.Subtract(playerRegen[4]);
             playerRegen_Span[5] = currentTime.Subtract(playerRegen[5]);
+            playerRegen_Span[6] = currentTime.Subtract(playerRegen[6]);
+            playerRegen_Span[7] = currentTime.Subtract(playerRegen[7]);
+            playerRegen_Span[8] = currentTime.Subtract(playerRegen[8]);
+            playerRegen_Span[9] = currentTime.Subtract(playerRegen[9]);
+            playerRegen_Span[10] = currentTime.Subtract(playerRegen[10]);
+            playerRegen_Span[11] = currentTime.Subtract(playerRegen[11]);
+            playerRegen_Span[12] = currentTime.Subtract(playerRegen[12]);
+            playerRegen_Span[13] = currentTime.Subtract(playerRegen[13]);
+            playerRegen_Span[14] = currentTime.Subtract(playerRegen[14]);
+            playerRegen_Span[15] = currentTime.Subtract(playerRegen[15]);
+            playerRegen_Span[16] = currentTime.Subtract(playerRegen[16]);
+            playerRegen_Span[17] = currentTime.Subtract(playerRegen[17]);
 
             // Calculate time since Refresh was cast on particular player
             playerRefresh_Span[0] = currentTime.Subtract(playerRefresh[0]);
@@ -5621,6 +5648,18 @@
             playerRefresh_Span[3] = currentTime.Subtract(playerRefresh[3]);
             playerRefresh_Span[4] = currentTime.Subtract(playerRefresh[4]);
             playerRefresh_Span[5] = currentTime.Subtract(playerRefresh[5]);
+            playerRefresh_Span[6] = currentTime.Subtract(playerRefresh[6]);
+            playerRefresh_Span[7] = currentTime.Subtract(playerRefresh[7]);
+            playerRefresh_Span[8] = currentTime.Subtract(playerRefresh[8]);
+            playerRefresh_Span[9] = currentTime.Subtract(playerRefresh[9]);
+            playerRefresh_Span[10] = currentTime.Subtract(playerRefresh[10]);
+            playerRefresh_Span[11] = currentTime.Subtract(playerRefresh[11]);
+            playerRefresh_Span[12] = currentTime.Subtract(playerRefresh[12]);
+            playerRefresh_Span[13] = currentTime.Subtract(playerRefresh[13]);
+            playerRefresh_Span[14] = currentTime.Subtract(playerRefresh[14]);
+            playerRefresh_Span[15] = currentTime.Subtract(playerRefresh[15]);
+            playerRefresh_Span[16] = currentTime.Subtract(playerRefresh[16]);
+            playerRefresh_Span[17] = currentTime.Subtract(playerRefresh[17]);
 
             // Calculate time since Songs were cast on particular player
             playerSong1_Span[0] = currentTime.Subtract(playerSong1[0]);
